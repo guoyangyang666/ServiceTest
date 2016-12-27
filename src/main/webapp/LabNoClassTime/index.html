@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta charset="UTF-8">
+    <title>江苏大学计算机学院实验室预约系统</title>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="author" content="ROC">
+    
+    
+    <script src="hm.js"></script><script type="text/javascript">
+        var root = "/";
+        var uid = "0";
+    </script>
+    <script src="jquery.js"></script>
+    <script src="layer.js"></script>
+    <script src="common.js"></script>
+    <!--[if lt IE 9]>
+        <script src="/app/template/assets/js/html5.js"></script>
+    <![endif]-->
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?edb8919ca75b7c7138f236483deb3b57";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+<link rel="stylesheet" type="text/css" href="index.css" media="all">
+</head>
+<body>
+<div class="wrap contain-c">
+    
+
+        <!-- 预约筛选查询结果区 -->
+    <table id="J_tb" class="bz-table" >
+          <thead>
+            <tr>
+                <th></th>
+                <th>星期一</th>
+                <th>星期二</th>
+                <th>星期三</th>
+                <th>星期四</th>
+                <th>星期五</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="leftTd">1 ~ 2</td>
+              <td class="unSelected"></td>
+              <td class="selected"></td>
+              <td class="unSelected"></td>
+              <td class="unSelected"></td>
+              <td class="unSelected"></td>
+            </tr>
+            <tr>
+              <td class="leftTd">3 ~ 5</td>
+              <td class="unSelected"></td>
+              <td class="unSelected"></td>
+              <td class="unSelected"></td>
+              <td class="unSelected"></td>
+              <td class="unSelected"></td>
+            </tr>
+            <tr>
+              <td class="leftTd">6 ~ 7</td>
+              <td class="unSelected"></td>
+              <td class="unSelected"></td>
+              <td class="unSelected"></td>
+              <td class="unSelected"></td>
+              <td class="unSelected"></td>
+            </tr>
+            <tr>
+              <td class="leftTd">8 ~10</td>
+              <td class="unSelected"></td>
+              <td class="unSelected"></td>
+              <td class="unSelected"></td>
+              <td class="unSelected"></td>
+              <td class="unSelected"></td>
+            </tr>
+            <tr>
+              <td class="leftTd">11 ~12</td>
+              <td class="unSelected"></td>
+              <td class="unSelected"></td>
+              <td class="unSelected"></td>
+              <td class="unSelected"></td>
+              <td class="unSelected"></td>
+            </tr>
+          </tbody>
+        </table>
+    </div>
+    <script>
+        $(function(){
+            var $tb = $('#J_tb');
+            var $td = $tb.find('td');
+            $td.click(function(){
+            var indexNoClass = $td.index($(this));//点击获取索引值
+            
+            var number = localStorage.getItem('number');//获取当前登陆的实验室管理员工号
+            var laboratoryId = localStorage.getItem('laboratoryId');//获取当前管理员操作的实验室id
+            $.ajax({
+    			type : "post",
+             	url: "http://localhost:8083/hc-mops/labAdmin/addLabNoClass.do",
+    			dataType: "json",
+    			data:{
+    				"laboratory_id": laboratoryId,//实验室编号
+    		        "times_index": indexNoClass,//选中的索引值    	
+    		        "staff_id": number,//用户名  
+    		      },	
+    			success : function(data) {
+    				alert(data);
+    				alert("无课课表添加成功");
+    			},
+    			error : function(XMLHttpRequest, textStatus, errorThrown) {
+    				alert("无课课表添加成功");
+    			}
+    		});
+            
+          })
+        })
+        
+        function updateSelected(length){
+        /* for(var i=0;i<length;i++){
+            if(i!=this.index ){      
+                this.autoObj.childNodes[i].className='unSelected';
+            }else{
+                this.autoObj.childNodes[i].className='Selected';
+                this.obj.value=this.autoObj.childNodes[i].seq;
+            }
+        } */
+    }
+    </script>
+</body>
+</html>

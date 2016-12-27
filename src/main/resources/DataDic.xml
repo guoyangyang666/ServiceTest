@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DataDictionarys>
+	<DataDictionary dicName="sex" tableName="DictCodeValue"
+		description="性别" uniqueField="code" parentField="" orderField="order"
+		condition="type='sex'">
+		<DataField fieldName="code" dataType="string" isDisplay="false"
+			description="编码" />
+		<DataField fieldName="value" dataType="string" isDisplay="true"
+			description="显示描述" />
+	</DataDictionary>
+	<DataDictionary dicName="nation" tableName="DictCodeValue"
+		description="民族" uniqueField="code" parentField="" orderField="order"
+		condition="type='nation'">
+		<DataField fieldName="code" dataType="string" isDisplay="false"
+			description="编码" />
+		<DataField fieldName="value" dataType="string" isDisplay="true"
+			description="显示描述" />
+		<DataField fieldName="order" dataType="string" isDisplay="false"
+			description="排序" />
+	</DataDictionary>
+	<DataDictionary dicName="contact" tableName="DictCodeValue"
+		description="联系人关系" uniqueField="code" parentField="" orderField="order"
+		condition="type='contact'">
+		<DataField fieldName="code" dataType="string" isDisplay="false"
+			description="编码" />
+		<DataField fieldName="value" dataType="string" isDisplay="true"
+			description="显示描述" />
+	</DataDictionary>
+	<DataDictionary dicName="edu" tableName="DictCodeValue"
+		description="学历" uniqueField="code" parentField="" orderField="order"
+		condition="type='edu'">
+		<DataField fieldName="code" dataType="string" isDisplay="false"
+			description="编码" />
+		<DataField fieldName="value" dataType="string" isDisplay="true"
+			description="显示描述" />
+	</DataDictionary>
+	<DataDictionary dicName="marriage" tableName="DictCodeValue"
+		description="婚姻状态" uniqueField="code" parentField="" orderField="order"
+		condition="type='marriage'">
+		<DataField fieldName="code" dataType="string" isDisplay="false"
+			description="编码" />
+		<DataField fieldName="value" dataType="string" isDisplay="true"
+			description="显示描述" />
+	</DataDictionary>
+	<DataDictionary dicName="insurance" tableName="DictCodeValue"
+		description="医疗保险类别" uniqueField="code" parentField="" orderField="order"
+		condition="type='insurance'">
+		<DataField fieldName="code" dataType="string" isDisplay="false"
+			description="编码" />
+		<DataField fieldName="value" dataType="string" isDisplay="true"
+			description="显示描述" />
+	</DataDictionary>
+</DataDictionarys>
