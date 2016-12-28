@@ -112,7 +112,7 @@ public class AdminService {
 			ModelMap modelMap, HttpServletResponse resp) {
 		String s = null;
 		JSONObject callback = new JSONObject();
-		List list = adminMgr.queryLabInfo(id);
+		List list = adminMgr.queryLabInfo(laboratory_id, id);
 		if(list.size()>0){
 			s = "已有该设备编号";
 		}else{
@@ -144,7 +144,19 @@ public class AdminService {
 		//System.out.println(json);
 		///return "{ 'test' : 'OK'}";		
 	}
-	//搜索本实验室的所有设备列表
+	//根据设备id查数据
+	@RequestMapping(value = "/queryLabInfo.do", method = { RequestMethod.GET,RequestMethod.POST })
+	public @ResponseBody String queryLabInfo(HttpServletRequest request,
+			String equip_id, String laboratory_id, ModelMap modelMap, HttpServletResponse resp) {
+		String s = null;
+		 List list = adminMgr.queryLabInfo(laboratory_id, equip_id);
+		 String json = JSONArray.fromObject(list).toString();
+		 System.out.println("-----------------------------------------");
+		 System.out.println(json);
+		 System.out.println("-----------------------------------------");
+		return json;		
+	}
+	//删除本实验室的设备列表
 		@RequestMapping(value = "/deleteLabInfo.do", method = { RequestMethod.GET,RequestMethod.POST })
 		public @ResponseBody String getAllEquip(HttpServletRequest request,
 				String laboratory_id, String id,
@@ -153,6 +165,20 @@ public class AdminService {
 			adminMgr.deleteLabInfo(id, laboratory_id);
 			
 			return "1";		
+		}
+		
+		
+		//查看个人基本信息,入参是管理员工号
+		@RequestMapping(value = "/queryLabAdminInfo.do", method = { RequestMethod.GET,RequestMethod.POST })
+		public @ResponseBody String queryLabAdminInfo(HttpServletRequest request,
+				String staff_id, ModelMap modelMap, HttpServletResponse resp) {
+			String s = null;
+			 List list = adminMgr.queryLabAdminInfo(staff_id);
+			 String json = JSONArray.fromObject(list).toString();
+			 System.out.println("-----------------------------------------");
+			 System.out.println(json);
+			 System.out.println("-----------------------------------------");
+			return json;		
 		}
 	
 }

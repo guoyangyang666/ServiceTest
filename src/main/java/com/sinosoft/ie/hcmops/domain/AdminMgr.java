@@ -23,8 +23,10 @@ public interface AdminMgr {
 	public List<Equip> getAllEquip(String type, String staff_id, String laboratory_id);
 	//添加本实验室的设备
 	public boolean addEquip(Equip equip);
-	//根据设备id查数据
-	public List queryLabInfo(String id);
+	//根据设备id和实验室id查数据
+	public List queryLabInfo(String laboratory_id, String id);
 	//根据设备id和实验室id删除数据
 	public void deleteLabInfo(String id,String laboratory_id);
+	//查看个人基本信息,入参是管理员工号
+	public List queryLabAdminInfo(String staff_id);
 }

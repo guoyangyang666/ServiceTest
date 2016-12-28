@@ -123,9 +123,9 @@ public class AdminMgrImpl implements AdminMgr {
 	
 	//根据设备id查数据
 	@Override
-	public List queryLabInfo(String id) {
+	public List queryLabInfo(String laboratory_id, String id) {
 		List list = null;
-		String sql = "SELECT * FROM  t_equip where id = '"+id+"'";
+		String sql = "SELECT * FROM  t_equip where id = '"+id+"' and laboratory_id = '"+laboratory_id+"'";
 		//查出来的数据转换成list
 		 list = jdbcTemplate.queryForList(sql);
 		 System.out.println(list);
@@ -137,6 +137,16 @@ public class AdminMgrImpl implements AdminMgr {
 	public void deleteLabInfo(String id,String laboratory_id) {
 		String sql = "DELETE FROM  t_equip where id = '"+id+"' and laboratory_id = '"+laboratory_id+"'";
 		jdbcTemplate.execute(sql);
+	}
+	
+	//查看个人基本信息,入参是管理员工号
+	@Override
+	public List queryLabAdminInfo(String staff_id) {
+		List list = null;
+		String sql = "SELECT * FROM t_staff where id = '"+staff_id+"'";
+		list = jdbcTemplate.queryForList(sql);
+		System.out.println(list);
+		return list;
 	}
 	
 	
