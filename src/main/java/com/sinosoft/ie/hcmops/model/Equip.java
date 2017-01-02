@@ -20,6 +20,7 @@ public class Equip {
 	private String staff_id;//管理员工号
 	private String type;//类型（1是管理员，2是教师，3是学生）
 	private String equip_desc;//备注（可填可不填）
+	private String order_num;//排序
 	public String getId() {
 		return id;
 	}
@@ -110,6 +111,12 @@ public class Equip {
 	}
 	public void setEquip_desc(String equip_desc) {
 		this.equip_desc = equip_desc;
+	}
+	public String getOrder_num() {
+		return order_num;
+	}
+	public void setOrder_num(String order_num) {
+		this.order_num = order_num;
 	}
 	
 }
