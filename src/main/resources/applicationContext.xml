@@ -9,7 +9,7 @@
 			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd 
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 	<!-- 自动扫描注解 -->
-	<context:component-scan base-package="com.sinosoft.ws.CardImpl"/>
+	<context:component-scan base-package="com.sinosoft.ie.hcmops.service.*"/>
 
 	<!-- 引入外部属性文件 将文件中定义的属性替代所有占位符 -->
 	<bean id="propertyConfigurer"
