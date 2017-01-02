@@ -9,8 +9,8 @@
 			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd 
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 	<!-- 自动扫描注解 -->
-	<context:component-scan base-package="com.sinosoft.ws.CardImpl"/>
-
+	<context:component-scan base-package="com.sinosoft.ie.hcmops.service.*"/>
+	
 	<!-- 引入外部属性文件 将文件中定义的属性替代所有占位符 -->
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -72,4 +72,11 @@
 	<bean id="newsMgr" class="com.sinosoft.ie.hcmops.domain.NewsMgrImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate" />
 	</bean>
+	<bean id="imageFileMgr" class="com.sinosoft.ie.hcmops.domain.ImageFileMgrImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	<bean id="equipMgr" class="com.sinosoft.ie.hcmops.domain.EquipMgrImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
+	
 </beans>
