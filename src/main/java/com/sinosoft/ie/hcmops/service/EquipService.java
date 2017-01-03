@@ -57,9 +57,9 @@ public class EquipService {
 	//根据新闻的id和实验室id查询所有内容
 	@RequestMapping(value = "/quryEquip.do", method = { RequestMethod.GET,RequestMethod.POST })
 	public @ResponseBody String quryEquip(HttpServletRequest request,
-			String id,String laboratory_id, ModelMap modelMap, HttpServletResponse resp) {
+			String id, ModelMap modelMap, HttpServletResponse resp) {
 		String s = null;
-		 List list = equipMgr.quryEquip(id, laboratory_id);
+		 List list = equipMgr.quryEquip(id);
 		 String json = JSONArray.fromObject(list).toString();
 		 System.out.println("-----------------------------------------");
 		 System.out.println(json);

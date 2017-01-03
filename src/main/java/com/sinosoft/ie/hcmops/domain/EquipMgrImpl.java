@@ -72,11 +72,11 @@ public class EquipMgrImpl implements EquipMgr {
 		System.err.println(list1);
 		return list1;
 	}
-	//根据设备的id和实验室的id查询所有内容
+	//根据设备的id查询所有内容
 	@Override
-	public List<Equip> quryEquip(String id,String laboratory_id) {
+	public List<Equip> quryEquip(String id) {
 		String sql = "select * from t_equip"
-				+ " where id = '"+id+"' and laboratory_id = '"+laboratory_id+"'";
+				+ " where id = '"+id+"'";
 		List list = (List<Equip>)jdbcTemplate.query(sql, new BeanPropertyRowMapper(Equip.class));	
 		return list;
 	}
