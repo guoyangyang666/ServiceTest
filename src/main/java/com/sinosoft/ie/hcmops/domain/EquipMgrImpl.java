@@ -75,9 +75,19 @@ public class EquipMgrImpl implements EquipMgr {
 	//根据设备的id查询所有内容
 	@Override
 	public List<Equip> quryEquip(String id) {
-		String sql = "select * from t_equip"
-				+ " where id = '"+id+"'";
-		List list = (List<Equip>)jdbcTemplate.query(sql, new BeanPropertyRowMapper(Equip.class));	
+		List list = null;
+		List<Map<String,String>> listMap = new ArrayList();
+//		String sql = "select * from t_equip"
+//				+ " where id = '"+id+"'";
+		String sql = "select e.id,e.equip_name,e.equip_image_one,e.equip_desc,e.application,e.laboratory_id,j.laboratory_name,j.laboratory_adress,j.laboratory_adressnum from t_equip e,t_jiaoshiinfor j "
+				+ " where e.id = '"+id+"' and e.laboratory_id = j.id";
+		//List list = (List<Equip>)jdbcTemplate.query(sql, new BeanPropertyRowMapper(Equip.class));	
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
 		return list;
 	}
 	

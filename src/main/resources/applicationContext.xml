@@ -77,5 +77,8 @@
 	<bean id="equipMgr" class="com.sinosoft.ie.hcmops.domain.EquipMgrImpl">
 		<property name="jdbcTemplate" ref="jdbcTemplate" />
 	</bean>
+	<bean id="contactMgr" class="com.sinosoft.ie.hcmops.domain.ContactMeMgrImpl">
+		<property name="jdbcTemplate" ref="jdbcTemplate" />
+	</bean>
 	
 </beans>

@@ -54,7 +54,7 @@ public class EquipService {
 		return json;		
 	}
 		
-	//根据新闻的id和实验室id查询所有内容
+	//根据设备的id所有内容
 	@RequestMapping(value = "/quryEquip.do", method = { RequestMethod.GET,RequestMethod.POST })
 	public @ResponseBody String quryEquip(HttpServletRequest request,
 			String id, ModelMap modelMap, HttpServletResponse resp) {
