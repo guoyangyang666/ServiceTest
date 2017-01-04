@@ -35,4 +35,30 @@ public class StudentsService {
 		System.out.print(json);
 		return json;
 	}
+	
+	//修改密码,用户的学号工号，要修改的密码，登陆类型，3为学生，2为教师
+	@RequestMapping(value = "/updatePassword.do", method = { RequestMethod.GET,RequestMethod.POST })
+	public @ResponseBody String getAllEquip(HttpServletRequest request,
+			String number, String loginPw, String logintype,ModelMap modelMap, HttpServletResponse resp) {
+		String s = null;
+		 List list = studentsMgr.updatePassword(number, loginPw, logintype);
+		 String json = JSONArray.fromObject(list).toString();
+		 System.out.println("-----------------------------------------");
+		 System.out.println(json);
+		 System.out.println("-----------------------------------------");
+		return json;		
+	}
+	
+	//查看个人基本信息,入参是管理员工号
+	@RequestMapping(value = "/queryStudentInfo.do", method = { RequestMethod.GET,RequestMethod.POST })
+	public @ResponseBody String queryStudentInfo(HttpServletRequest request,
+			String stu_id, ModelMap modelMap, HttpServletResponse resp) {
+		String s = null;
+		 List list = studentsMgr.queryStudentInfo(stu_id);
+		 String json = JSONArray.fromObject(list).toString();
+		 System.out.println("-----------------------------------------");
+		 System.out.println(json);
+		 System.out.println("-----------------------------------------");
+		return json;		
+	}
 }
