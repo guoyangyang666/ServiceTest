@@ -29,7 +29,7 @@ public class NoticeMgrImpl implements NoticeMgr {
 	public List<Map<String, String>> quryTwoNotice() {
 		List list = null;
 		List<Map<String,String>> listMap = new ArrayList();
-		String sql= "select id,notice_title,notice_desc,notice_date from t_notice where  del_status = 1 order by order_num desc limit 0,2"; 
+		String sql= "select id,notice_title,notice_desc,notice_date,image_url from t_notice where  del_status = 1 order by order_num desc limit 0,2"; 
 		try {
 			list = jdbcTemplate.queryForList(sql);
 		} catch (Exception e) {
