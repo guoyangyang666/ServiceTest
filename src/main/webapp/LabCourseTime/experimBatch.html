@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>	
+		<script src="jquery.js"></script>	
+		<script src="layer.js"></script>
+		<link rel="stylesheet" type="text/css" href="./index.css" media="all">
+		<link rel="stylesheet" href="./common.css"/>
+	</head>
+	<body>
+	
+    <script type="text/javascript">
+    
+    	var laboratory_id = localStorage.getItem('laboratoryId');//获取当前管理员操作的实验室id
+    	console.log("laboratory_id",laboratory_id)
+    	//调取课表
+    	$.ajax({
+    		type : "post",
+           	url: "http://127.0.0.1:9999/hc-mops/labAdmin/quryAllCourse.do",
+           	async:false, //调整为同步请求
+   			dataType: "json",
+   			data:{
+   				"laboratory_id": laboratory_id,//实验室编号
+   		      },
+   		   success : function(data) {
+				var arr2 = data;
+				course(arr2);
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				alert("出错了，请联系管理员");
+			}
+    	});
+    
+function course(arr2){
+	var arr = arr2;
+	var sw =1;
+	/* arr444 = [//课程名 星期数 开始课时 持续课时 开始周数 持续周数
+	       ["IOS应用开发(考查) (限选)",1,1,4,1,15],
+	       ["计算机二维动画制作(考查) (限选)",  2,  1,  4,  1,  15],
+	       ["PHP动态网页技术(考查) (限选)",  2,  5,  2,  1,  15],
+	       ["PHP动态网页技术(考查) (限选)",  3,  1,  2,  1,  15],
+	       ["职业发展与就业指导(考查) (必修)",  3,  3,  2,  2,  13],
+	       ["计算机二维动画制作(考查) (限选)",  4,  1,  4,  1,  15],
+	       ["IOS应用开发(考查) (限选)",  5,  1,  4,  1,  15],
+	       ["毕业设计(论文) 指导(考查) (必修)",  5,  5,  2,  1,  15]
+	   ]; */
+
+	   var arr1=[["时间/星期","星期一","星期二","星期三","星期四","星期五"]];
+	  
+	   for(var i = 1 ; i < 14 ; i++){
+	       arr1.push(["第"+i+"节"]);
+	       for(var j = 0 ; j < 5 ; j++){
+	           arr1[arr1.length-1].push(" ");
+	       }
+	   }//构建了一个课程表数组 //课程名 星期数 开始课时 持续课时 开始周数 持续周数
+	   
+	   for(var i = 0 ; i < arr.length ; i++){
+	       var name = arr[i].courses_name; //课程名	       	
+	       var week = parseInt(arr[i].week);// 星期数 
+	       var start = parseInt(arr[i].start_times);// 开始课时
+	       var startNum = parseInt(arr[i].stop_times);// 持续课时
+	       var startWeek = parseInt(arr[i].start_week);//开始周数
+	       var lastWeek = parseInt(arr[i].lastWeek);//持续周数
+	       var type = parseInt(arr[i].type);//持续周数
+	      
+	       for(var j = 0 ; j < startNum ; j++){
+	    	   if( j == 0){
+	               arr1[start+j][week]={content:name+("{第"+startWeek+"-"+lastWeek+"周}"),rowspan:startNum};
+	           }else{
+	               arr1[start+j][week]=null;
+	           }
+	       }
+	   }//渲染虚拟table
+
+	   var str = "";
+	   str += "<table border>";
+	   for(var i = 0 ; i < arr1.length ; i++){
+	       str+="<tr>"
+	       for(var j = 0 ; j < arr1[i].length ; j++){
+	           if(arr1[i][j] == null){
+
+	           }else if((typeof arr1[i][j]) == "string"){
+	        	   str+="<td class=unSelected  onClick=addExperimBatch("+i+","+j+") >"+arr1[i][j]+"</td>";//无课的   	  
+	           }else if(type == "1"){
+	               /* str+="<td class=selected rowspan="+arr1[i][j].rowspan+">"+arr1[i][j].content+"</td>"//有课的 */
+	               str+="<td class=selected rowspan="+arr1[i][j].rowspan+">当前课程不可选</td>"
+	           }
+	       }    
+	       str+="</tr>"
+	   }
+	   str += "</table>";
+	   document.write(str);
+ } 
+ function addExperimBatch(i,j){
+	 localStorage.setItem('start_times',i);
+	 localStorage.setItem('week',j);
+	 var w,h,className;
+		function getSrceenWH(){
+			w = $(window).width();
+			h = $(window).height();
+			$('#dialogBg').width(w).height(h);
+		}
+		
+		window.onresize = function(){  
+			getSrceenWH();
+		}  
+		$(window).resize();  
+		$(function(){
+			getSrceenWH();
+			
+			//显示弹框
+			/* $('.box a').click(function(){ */
+				className = $(this).attr('class');
+				$('#dialogBg').fadeIn(300);
+				$('#dialog').removeAttr('class').addClass('animated '+className+'').fadeIn();
+		/* 	}); */
+			
+			//关闭弹窗
+			$('.claseDialogBtn').click(function(){
+				$('#dialogBg').fadeOut(300,function(){
+					$('#dialog').addClass('bounceOutUp').fadeOut();
+				});
+			});
+		});
+	
+ }
+
+ 
+</script>
+	<div class="box">
+		<div id="dialogBg"></div>
+		<div id="dialog" class="animated">
+			<img class="dialogIco" width="50" height="50" src="images/ico.png" alt="" />
+			<div class="dialogTop">
+				<a href="javascript:;" class="claseDialogBtn">关闭</a>
+			</div>
+			<form action="" method="post" id="editForm">
+				<ul class="editInfos">
+					<li><label><font color="#ff0000">* </font>实验名：<input type="text" name="" required value="" id="course_name" class="ipt" /></label></li>				
+					<li><label><font color="#ff0000">* </font>实验批次：<input type="text" name="" required value=""  class="ipt" /></label></li>
+					<li><label><font color="#ff0000">* </font>持续课时：<input type="text" name="" required value="" id="stop_times" class="ipt" /></label></li>
+					<li><label><font color="#ff0000">* </font>开始周数：<input type="text" name="" required value="" id="startWeek" class="ipt" /></label></li>
+					<li><label><font color="#ff0000">* </font>持续周数：<input type="text" name="" required value="" id="lastWeek" class="ipt" /></label></li>
+					
+					<li><input type="submit" value="确认"  class="submitBtn"  onClick="AjaxSubmit()"/></li>
+				</ul>
+			</form>
+		</div>
+	</div>
+ 	<script>
+ 	  function AjaxSubmit(){
+	    var start_times=parseInt(localStorage.getItem('start_times'));//开始课时，数组i的值
+ 	 	var course_name=$("#course_name").val();//实验批次名（什么实验）
+ 	 	var stop_times=parseInt($("#stop_times").val());//持续课时，
+		if(start_times + stop_times -1 >13){
+			console.log(start_times + stop_times -1);
+			alert("超出当天课时，请重新输入课时");
+		}else{
+			//添加实验批次
+	 	 	$.ajax({
+	 	 		type : "post",
+	 	        	url: "http://127.0.0.1:9999/hc-mops/labAdmin/addLabExperim.do",
+	 	        	async:false, //调整为同步请求
+	 				dataType: "json",
+	 				data:{
+	 					"stop_times":2,//持续课时，
+	 					"week":localStorage.getItem('week'),//星期数，数组j的值
+	 					"start_times":start_times,//开始课时，数组i的值
+	 					"course_name":course_name,//实验批次名（什么实验）
+	 					"laboratory_id": laboratory_id,//实验室编号
+	 			      },
+	 			     contentType:"application/x-www-form-urlencoded;charset=GBK",
+	 			   success : function(data) {
+	 					var arr2 = data;
+	 					if(arr2[0].code == 1){
+	 						/* ok(); */
+	 						alert("添加成功");
+	 					}
+	 					
+	 				},
+	 				error : function(XMLHttpRequest, textStatus, errorThrown) {
+	 					alert("出错了，请联系管理员");
+	 				}
+	 	 	});
+		}
+ 	 	
+ 	 }
+ 	  
+ 	 /* function ok(){
+ 		var w,h,className;
+		function getSrceenWH(){
+			w = $(window).width();
+			h = $(window).height();
+			$('#dialogBgOk').width(w).height(h);
+		}
+		
+		window.onresize = function(){  
+			getSrceenWH();
+		}  
+		$(window).resize();  
+		$(function(){
+			getSrceenWH();
+			
+			//显示弹框
+				className = $(this).attr('class');
+				$('#dialogBgOk').fadeIn(300);
+				$('#dialogOk').removeAttr('class').addClass('animated '+className+'').fadeIn();
+			
+			//关闭弹窗
+			$('.claseDialogBtn').click(function(){
+				$('#dialogBgOk').fadeOut(300,function(){
+					$('#dialogOk').addClass('bounceOutUp').fadeOut();
+				});
+			});
+		});
+ 	 } */
+	</script>
+	
+</body>
+</html>

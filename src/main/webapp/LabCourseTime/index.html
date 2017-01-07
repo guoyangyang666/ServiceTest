@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>	
+		<script src="jquery.js"></script>	
+	</head>
+	<body>
+    <script type="text/javascript">
+    
+    	var laboratory_id = localStorage.getItem('laboratoryId');//获取当前管理员操作的实验室id
+    	console.log("laboratory_id",laboratory_id)
+    	//调取课表
+    	$.ajax({
+    		type : "post",
+           	url: "http://127.0.0.1:9999/hc-mops/labAdmin/quryAllCourse.do",
+           	async:false, //调整为同步请求
+   			dataType: "json",
+   			data:{
+   				"laboratory_id": laboratory_id,//实验室编号
+   		      },
+   		   success : function(data) {
+				var arr2 = data;
+				course(arr2);
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				alert("出错了，请联系管理员");
+			}
+    	});
+    
+function course(arr2){
+	var arr = arr2;
+	arr444 = [//课程名 星期数 开始课时 持续课时 开始周数 持续周数
+	       ["IOS应用开发(考查) (限选)",1,1,4,1,15],
+	       ["计算机二维动画制作(考查) (限选)",  2,  1,  4,  1,  15],
+	       ["PHP动态网页技术(考查) (限选)",  2,  5,  2,  1,  15],
+	       ["PHP动态网页技术(考查) (限选)",  3,  1,  2,  1,  15],
+	       ["职业发展与就业指导(考查) (必修)",  3,  3,  2,  2,  13],
+	       ["计算机二维动画制作(考查) (限选)",  4,  1,  4,  1,  15],
+	       ["IOS应用开发(考查) (限选)",  5,  1,  4,  1,  15],
+	       ["毕业设计(论文) 指导(考查) (必修)",  5,  5,  2,  1,  15]
+	   ];
+
+	   var arr1=[["时间/星期","星期一","星期二","星期三","星期四","星期五"]];
+	  
+	   for(var i = 1 ; i < 14 ; i++){
+	       arr1.push(["第"+i+"节"]);
+	       for(var j = 0 ; j < 5 ; j++){
+	           arr1[arr1.length-1].push(" ");
+	       }
+	   }//构建了一个课程表数组 //课程名 星期数 开始课时 持续课时 开始周数 持续周数
+	   
+	   for(var i = 0 ; i < arr.length ; i++){
+	       var name = arr[i].courses_name; //课程名	       	
+	       var week = parseInt(arr[i].week);// 星期数 
+	       var start = parseInt(arr[i].start_times);// 开始课时
+	       var startNum = parseInt(arr[i].stop_times);// 持续课时
+	       var startWeek = parseInt(arr[i].start_week);//开始周数
+	       var lastWeek = parseInt(arr[i].last_week);//持续周数
+	       for(var j = 0 ; j < startNum ; j++){
+	    	   if( j == 0){
+	               arr1[start+j][week]={content:name+("{第"+startWeek+"-"+lastWeek+"周}"),rowspan:startNum};
+	           }else{
+	               arr1[start+j][week]=null;
+	           }
+	       }
+	   }//渲染虚拟table
+
+	   var str = "";
+	   str += "<table border>";
+	   for(var i = 0 ; i < arr1.length ; i++){
+	       str+="<tr>"
+	       for(var j = 0 ; j < arr1[i].length ; j++){
+	           if(arr1[i][j] == null){
+
+	           }else if((typeof arr1[i][j]) == "string"){
+	               str+="<td>"+arr1[i][j]+"</td>";
+	           }else{
+	               str+="<td rowspan="+arr1[i][j].rowspan+">"+arr1[i][j].content+"</td>"
+	           }
+	       }    
+	       str+="</tr>"
+	   }
+	   str += "</table>";
+	   document.write(str);
+}
+
+
+</script>
+</body>
+</html>

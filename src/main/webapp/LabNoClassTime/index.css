@@ -48,10 +48,10 @@ td, th { padding: 0px; }
 .bz-nav-pills > li + li { margin-left: 5px; margin-top: 0px; }
 .bz-nav-children { display: none; position: absolute; left: 0px; top: auto; right: 0px; z-index: 3; border-radius: 4px; background-color: rgb(255, 255, 255); border: 1px solid rgb(238, 238, 238); }
 .bz-nav-allow-hover:hover > .bz-nav-children, .bz-nav-active > .bz-nav-children { display: block; position: absolute; }
-.bz-nav-has-children > .bz-nav-link::after { padding-left: 0.5em; content: "▾"; font-size: small; }
+.bz-nav-has-children > .bz-nav-link::after { padding-left: 0.5em; content: "鈻�; font-size: small; }
 .bz-breadcrumb { padding: 0.7em 0.5em; margin-bottom: 1rem; list-style: outside none none; background-color: transparent; border-radius: 0px; }
 .bz-breadcrumb > li { display: inline-block; }
-.bz-breadcrumb > li + li::before { content: "/ "; padding: 0px 8px; color: rgb(204, 204, 204); }
+.bz-breadcrumb > li + li::before { content: "/聽"; padding: 0px 8px; color: rgb(204, 204, 204); }
 .bz-breadcrumb > .bz-active { color: rgb(153, 153, 153); }
 .bz-panel { margin-bottom: 20px; background-color: rgb(255, 255, 255); border: 1px solid transparent; border-radius: 0px; }
 .bz-panel-hd { padding: 0.6rem 1.25rem; border-top-right-radius: 0px; border-top-left-radius: 0px; }
@@ -125,16 +125,16 @@ td, th { padding: 0px; }
 @font-face {
   font-family: "iconfont";  src: url('iconfont.eot') format("embedded-opentype"), url('iconfont.woff') format("woff"), url('iconfont.ttf') format("truetype"), url('iconfont.svg') format("svg");}
 .iconfont { font-family: "iconfont" ! important; font-size: 16px; font-style: normal; }
-.icon-login::before { content: ""; }
-.icon-biaoqian::before { content: "󰁠"; }
-.icon-jinggao::before { content: "󰂷"; }
-.icon-tishi::before { content: "󰂶"; }
-.icon-daochu::before { content: ""; }
-.icon-anquan::before { content: ""; }
-.icon-search::before { content: ""; }
-.icon-queren2::before { content: ""; }
-.icon-shanchu::before { content: "󰀍"; }
-.icon-date::before { content: ""; }
+.icon-login::before { content: "顦�; }
+.icon-biaoqian::before { content: "蟀仩"; }
+.icon-jinggao::before { content: "蟀偡"; }
+.icon-tishi::before { content: "蟀偠"; }
+.icon-daochu::before { content: "顩�; }
+.icon-anquan::before { content: "顧�; }
+.icon-search::before { content: "顦�; }
+.icon-queren2::before { content: "顦�; }
+.icon-shanchu::before { content: "蟀�"; }
+.icon-date::before { content: "顦�; }
 /* ::::: http://cclab.ujs.edu.cn/app/template/assets/layer/skin/layer.css ::::: */
 
 html #layui_layer_skinlayercss { display: none; position: absolute; width: 1989px; }

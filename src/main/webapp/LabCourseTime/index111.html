@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta charset="UTF-8">
+    <title></title>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="author" content="ROC">        
+    <script src="jquery.js"></script>
+
+    <!--[if lt IE 9]>
+        <script src="/app/template/assets/js/html5.js"></script>
+    <![endif]-->
+
+
+<!-- 
+<link rel="stylesheet" type="text/css" href="index.css" media="all"> -->
+</head>
+<body>
+    <script type="text/javascript">
+
+arr = [//课程名 星期数 开始课时 持续课时 开始周数 持续周数
+    ["IOS应用开发(考查) (限选)",1,1,2,1,15],
+    ["计算机二维动画制作(考查) (限选)",  2,  1,  4,  1,  15],
+    ["PHP动态网页技术(考查) (限选)",  2,  5,  2,  1,  15],
+    ["PHP动态网页技术(考查) (限选)",  3,  1,  2,  1,  15],
+    ["职业发展与就业指导(考查) (必修)",  3,  3,  2,  2,  13],
+    ["计算机二维动画制作(考查) (限选)",  4,  1,  4,  1,  15],
+    ["IOS应用开发(考查) (限选)",  5,  1,  4,  1,  15],
+    ["毕业设计(论文) 指导(考查) (必修)",  5,  5,  2,  1,  15]
+];
+// document.write("<table border=1>");
+//     document.write("<tr><th>时间段</th><th>星期一</th><th>星期二</th><th>星期三</th><th>星期四</th><th>星期五</th></tr>");
+//         for(var i = 1 ; i < 13 ;i++){//循环一天有多少课 1-13 一共12节课 4 4 4 。
+//             document.write("<tr>");
+//                 document.write("<td>"+i+"</td>");
+//                 var tag = 1;//每次先读取周一的
+//                 for(var j =0 ; j < arr.length ; j++){
+//                     if(tag < arr[j][1]){//当读到周三了，我的标记还是周一，那么就证明,我缺少两天的标记
+//                         for(tag ; tag < arr[j][1] ; tag++){
+//                             // document.write("<td></td>");
+//                         }
+//                     }
+//                     if(arr[j][2] == i){//循环一周的。
+//                         tag = arr[j][1]+1;
+//                         document.write("<td rowspan="+arr[j][3]+">"+arr[j][0]+"</td>");
+//                     }
+//                 }
+//             document.write("</tr>");
+//         }
+// document.write("</table>");
+
+var arr1=[["时间/星期","星期一","星期二","星期三","星期四","星期五"]];
+for(var i = 1 ; i < 14 ; i++){
+    arr1.push(["第"+i+"节"]);
+    for(var j = 0 ; j < 5 ; j++){
+        arr1[arr1.length-1].push(" ");
+    }
+}//构建了一个课程表数组
+
+for(var i = 0 ; i < arr.length ; i++){
+	for(var j=0; j<arr[i].length; j++){
+		var name = arr[i][0];
+
+    var week = arr[i][1];
+    var start = arr[i][2];
+    var startNum = arr[i][3];
+    var startWeek = arr[i][4];
+    var lastWeek = arr[i][5];
+    for(var j = 0 ; j < startNum ; j++){
+        if( j == 0){
+            arr1[start+j][week]={content:name+("{第"+startWeek+"-"+lastWeek+"周}"),rowspan:startNum}
+        }else{
+            arr1[start+j][week]=null;
+        }
+    }
+	}
+
+}//渲染虚拟table
+
+// var str = "";
+// str += "<table  border>";
+// for(var i = 0 ; i < arr1.length ; i++){
+//     str+="<tr>"
+//     for(var j = 0 ; j < arr1[i].length ; j++){
+//         if(arr1[i][j] == null){
+
+//         }else if((typeof arr1[i][j]) == "string"){
+//             str+="<td>"+arr1[i][j]+"</td>";
+//         }else{
+//             str+="<td rowspan="+arr1[i][j].rowspan+">"+arr1[i][j].content+"</td>"
+//         }
+//     }
+//     str+="</tr>"
+// }
+// str += "</table>";
+// document.write(str);
+var Odiv = document.createElement('table');
+Odiv.className="c";
+         //创建一个span
+for(var i = 0 ; i < arr1.length ; i++){
+    var Ospan=document.createElement("tr");
+    Odiv.appendChild(Ospan);            //在div内创建一个span
+    for(var j = 0 ; j < arr1[i].length ; j++){
+        if(arr1[i][j] == null){
+
+        }else if((typeof arr1[i][j]) == "string"){
+            var Ospan1=document.createElement("td");
+            Ospan.appendChild(Ospan1);
+            Ospan1.innerHTML = arr1[i][j];
+        }else{
+            var Ospan1=document.createElement("td");
+            Ospan.appendChild(Ospan1);
+            Ospan.rowspan = arr1[i][j].rowspan;
+            Ospan1.innerHTML = arr1[i][j].content;
+
+        }
+    }
+
+}
+    document.body.appendChild(Odiv);
+</script>
+</body>
+</html>

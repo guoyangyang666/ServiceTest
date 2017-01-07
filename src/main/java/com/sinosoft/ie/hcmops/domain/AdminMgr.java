@@ -1,8 +1,10 @@
 package com.sinosoft.ie.hcmops.domain;
 
 import java.util.List;
+import java.util.Map;
 
 import com.sinosoft.ie.hcmops.model.Equip;
+import com.sinosoft.ie.hcmops.model.ExperimBatch;
 import com.sinosoft.ie.hcmops.model.LabInfo;
 import com.sinosoft.ie.hcmops.model.NoClassTimes;
 import com.sinosoft.ie.mpiws.model.PersonInfo;
@@ -29,4 +31,9 @@ public interface AdminMgr {
 	public void deleteLabInfo(String id,String laboratory_id);
 	//查看个人基本信息,入参是管理员工号
 	public List queryLabAdminInfo(String staff_id);
+	//查看实验室课表
+	public List<Map<String, String>> quryAllCourse(String laboratory_id);
+	//实验室管理员根据课表添加实验批次,入参为实验室id
+	public List<Map<String, String>> addLabExperim(ExperimBatch experimBatch);
+	
 }
