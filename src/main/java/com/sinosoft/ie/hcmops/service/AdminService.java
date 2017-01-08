@@ -18,6 +18,7 @@ import com.sinosoft.ie.hcmops.domain.AdminMgrImpl;
 import com.sinosoft.ie.hcmops.domain.PersonMgrImpl;
 import com.sinosoft.ie.hcmops.model.Equip;
 import com.sinosoft.ie.hcmops.model.ExperimBatch;
+import com.sinosoft.ie.hcmops.model.Experimbatchs;
 import com.sinosoft.ie.hcmops.model.LabInfo;
 import com.sinosoft.ie.hcmops.model.NoClassTimes;
 import com.sinosoft.ie.mpiws.model.PersonInfo;
@@ -216,6 +217,69 @@ public class AdminService {
 			experimBatch.setType(type);
 			List list = adminMgr.addLabExperim(experimBatch);			
 			String json = JSONArray.fromObject(list).toString();
+			 System.out.println("-----------------------------------------");
+			 System.out.println(json);
+			 System.out.println("-----------------------------------------");
+			return json;		
+		}
+		//查看实验室课表
+		@RequestMapping(value = "/quryCourseExperim.do", method = { RequestMethod.GET,RequestMethod.POST })
+		public @ResponseBody String quryCourseExperim(HttpServletRequest request,
+				String laboratory_id, ModelMap modelMap, HttpServletResponse resp) {
+			String s = null;
+			 List list = adminMgr.quryCourseExperim(laboratory_id);
+			 String json = JSONArray.fromObject(list).toString();
+			 System.out.println("-----------------------------------------");
+			 System.out.println(json);
+			 System.out.println("-----------------------------------------");
+			return json;		
+		}
+		//添加本实验批次
+		@RequestMapping(value = "/addExperimbatchs.do", method = { RequestMethod.GET,RequestMethod.POST })
+		public @ResponseBody String addExperimbatchs(HttpServletRequest request,
+				String experim_name, String batch, String start_week,
+				String last_week, String laboratory_id,			
+				ModelMap modelMap, HttpServletResponse resp) {
+			String s = null;
+			JSONObject callback = new JSONObject();
+			Experimbatchs experimbatchs = new Experimbatchs();
+			String id = UUID.randomUUID().toString();
+			experimbatchs.setId(id);
+			experimbatchs.setExperim_name(experim_name);
+			experimbatchs.setBatch(batch);
+			experimbatchs.setStart_week(start_week);
+			experimbatchs.setLast_week(last_week);
+			experimbatchs.setLaboratory_id(laboratory_id);
+			String status = "1";
+			experimbatchs.setStatus(status);
+			List list = adminMgr.addExperimbatchs(experimbatchs);		
+			String json = JSONArray.fromObject(list).toString();
+			 System.out.println("-----------------------------------------");
+			 System.out.println(json);
+			 System.out.println("-----------------------------------------");
+			return json;		
+		}
+		
+		//查询的实验批次，新
+		@RequestMapping(value = "/quryExperimbatchs.do", method = { RequestMethod.GET,RequestMethod.POST })
+		public @ResponseBody String quryExperimbatchs(HttpServletRequest request,
+				String laboratory_id, ModelMap modelMap, HttpServletResponse resp) {
+			String s = null;
+			 List list = adminMgr.quryExperimbatchs(laboratory_id);
+			 String json = JSONArray.fromObject(list).toString();
+			 System.out.println("-----------------------------------------");
+			 System.out.println(json);
+			 System.out.println("-----------------------------------------");
+			return json;		
+		}
+		//删除本实验室的设备列表
+		@RequestMapping(value = "/deleteExperimbatchs.do", method = { RequestMethod.GET,RequestMethod.POST })
+		public @ResponseBody String deleteExperimbatchs(HttpServletRequest request,
+				String id,
+				ModelMap modelMap, HttpServletResponse resp) {
+			String s = null;
+			List list = adminMgr.deleteExperimbatchs(id);
+			 String json = JSONArray.fromObject(list).toString();
 			 System.out.println("-----------------------------------------");
 			 System.out.println(json);
 			 System.out.println("-----------------------------------------");

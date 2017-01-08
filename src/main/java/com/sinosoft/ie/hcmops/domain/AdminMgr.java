@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.sinosoft.ie.hcmops.model.Equip;
 import com.sinosoft.ie.hcmops.model.ExperimBatch;
+import com.sinosoft.ie.hcmops.model.Experimbatchs;
 import com.sinosoft.ie.hcmops.model.LabInfo;
 import com.sinosoft.ie.hcmops.model.NoClassTimes;
 import com.sinosoft.ie.mpiws.model.PersonInfo;
@@ -33,6 +34,14 @@ public interface AdminMgr {
 	public List queryLabAdminInfo(String staff_id);
 	//查看实验室课表
 	public List<Map<String, String>> quryAllCourse(String laboratory_id);
+	//查询实验室课表及添加的实验批次
+	public List<Map<String, String>> quryCourseExperim(String laboratory_id);
+	//添加的实验批次，新
+	public List<Map<String, String>> addExperimbatchs(Experimbatchs experimbatchs);
+	//查询的实验批次，新
+	public List<Map<String, String>> quryExperimbatchs(String laboratory_id);
+	//删除的实验批次，新
+	public List<Map<String, String>> deleteExperimbatchs(String id);
 	//实验室管理员根据课表添加实验批次,入参为实验室id
 	public List<Map<String, String>> addLabExperim(ExperimBatch experimBatch);
 	

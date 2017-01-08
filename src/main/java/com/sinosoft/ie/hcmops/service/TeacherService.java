@@ -1,6 +1,7 @@
 package com.sinosoft.ie.hcmops.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -41,4 +42,22 @@ public class TeacherService {
 		 System.out.println("-----------------------------------------");
 		return json;		
 	}
+	
+		//教师查看预约批次
+		@RequestMapping(value = "/queryApplyBach.do", method = { RequestMethod.GET,RequestMethod.POST })
+		public @ResponseBody String queryApplyBach(HttpServletRequest request, HttpServletResponse resp,
+				 ModelMap modelMap) {
+			 List list = teacherMgr.queryApplyBatch();
+			 String json = JSONArray.fromObject(list).toString();		 
+			return json;		
+		}
+		//教师预约实验批次
+		@RequestMapping(value = "/applyBach.do", method = { RequestMethod.GET,RequestMethod.POST })
+		public @ResponseBody String applyBach(HttpServletRequest request, HttpServletResponse resp) {
+			 Map<String, String[]> para = request.getParameterMap();
+			 for (String key : para.keySet()) {
+				   System.out.println("key= "+ key + " and value= " + para.get(key).toString());
+				  }
+			return null;		
+		}
 }

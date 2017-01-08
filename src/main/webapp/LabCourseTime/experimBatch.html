@@ -17,7 +17,7 @@
     	//调取课表
     	$.ajax({
     		type : "post",
-           	url: "http://127.0.0.1:9999/hc-mops/labAdmin/quryAllCourse.do",
+           	url: "http://127.0.0.1:9999/hc-mops/labAdmin/quryCourseExperim.do",
            	async:false, //调整为同步请求
    			dataType: "json",
    			data:{
@@ -62,8 +62,9 @@ function course(arr2){
 	       var startNum = parseInt(arr[i].stop_times);// 持续课时
 	       var startWeek = parseInt(arr[i].start_week);//开始周数
 	       var lastWeek = parseInt(arr[i].lastWeek);//持续周数
-	       var type = parseInt(arr[i].type);//持续周数
-	      
+	       var type = parseInt(arr[i].type);//类型
+	       console.log("i",i);
+	      console.log("type",type);
 	       for(var j = 0 ; j < startNum ; j++){
 	    	   if( j == 0){
 	               arr1[start+j][week]={content:name+("{第"+startWeek+"-"+lastWeek+"周}"),rowspan:startNum};
@@ -77,7 +78,9 @@ function course(arr2){
 	   str += "<table border>";
 	   for(var i = 0 ; i < arr1.length ; i++){
 	       str+="<tr>"
+	    	   console.log("typ223333e",type);
 	       for(var j = 0 ; j < arr1[i].length ; j++){
+	    	   console.log("typ222e",type);
 	           if(arr1[i][j] == null){
 
 	           }else if((typeof arr1[i][j]) == "string"){

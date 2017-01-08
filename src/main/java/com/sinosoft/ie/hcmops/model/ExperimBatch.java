@@ -14,6 +14,7 @@ public class ExperimBatch {
 	private String start_week;//开始周数
 	private String last_week;//持续周数
 	private String laboratory_id;//对应的实验室
+	private String batch;//实验批次
 	private String type;//类型，1为实验室的课，2为实验室管理添加的实验室批次
 	public String getId() {
 		return id;
@@ -75,6 +76,12 @@ public class ExperimBatch {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public String getBatch() {
+		return batch;
+	}
+	public void setBatch(String batch) {
+		this.batch = batch;
 	}
 	
 	

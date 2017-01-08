@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.sinosoft.ie.hcmops.model.Equip;
 import com.sinosoft.ie.hcmops.model.ExperimBatch;
+import com.sinosoft.ie.hcmops.model.Experimbatchs;
 import com.sinosoft.ie.hcmops.model.LabInfo;
 import com.sinosoft.ie.hcmops.model.NoClassTimes;
 import com.sinosoft.ie.mpiws.model.PersonInfo;
@@ -160,7 +161,7 @@ public class AdminMgrImpl implements AdminMgr {
 		List<Map<String,String>> listMap = new ArrayList();
 		String sql= "select ct.id,ct.week,ct.course_name,start_times,ct.stop_times,ct.start_week,ct.last_week,ct.start_time,ct.stop_time,ct.type,co.courses_name "
 				+ "from t_course_time ct,t_course co "
-				+ "where  ct.laboratory_id = '"+laboratory_id+"' and ct.course_id = co.id"; 
+				+ "where  ct.laboratory_id = '"+laboratory_id+"' and ct.course_id = co.id and type = 1"; 
 		try {
 			list = jdbcTemplate.queryForList(sql);
 		} catch (Exception e) {
@@ -186,7 +187,8 @@ public class AdminMgrImpl implements AdminMgr {
 		String last_week = experimBatch.getLast_week();//
 		String laboratory_id = experimBatch.getLaboratory_id();//
 		String type = experimBatch.getType();
-		String sql = "insert into t_course_time(id,week,start_times,stop_times,course_name,start_week,last_week,laboratory_id,type)value('"+id+"','"+week+"','"+start_times+"','"+stop_times+"','"+course_name+"','"+start_week+"','"+last_week+"','"+laboratory_id+"','"+type+"')";
+		String batch = experimBatch.getBatch();
+		String sql = "insert into t_course_time(id,week,start_times,stop_times,course_name,start_week,last_week,laboratory_id,batch,type)value('"+id+"','"+week+"','"+start_times+"','"+stop_times+"','"+course_name+"','"+start_week+"','"+last_week+"','"+laboratory_id+"','"+batch+",'"+type+"')";
 		try {
 			jdbcTemplate.execute(sql);
 			mapTemp.put("code", "1");
@@ -197,6 +199,90 @@ public class AdminMgrImpl implements AdminMgr {
 			mapTemp.put("res", "添加成功");
 		}
 		listMap.add(mapTemp);
+		 return listMap;
+	}
+	
+	//查询实验室课表及添加的实验批次
+	@Override
+	public List<Map<String, String>> quryCourseExperim(String laboratory_id) {
+		List list = null;
+		List<Map<String,String>> listMap = new ArrayList();
+		String sql= "select ct.id,ct.week,ct.course_name,start_times,ct.stop_times,ct.start_week,ct.last_week,ct.start_time,ct.stop_time,ct.type,co.courses_name "
+				+ "from t_course_time ct,t_course co "
+				+ "where  ct.laboratory_id = '"+laboratory_id+"' and ct.course_id = co.id"; 
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
+	}
+	
+	//添加的实验批次
+	@Override
+	public List<Map<String, String>> addExperimbatchs(Experimbatchs experimbatchs) {
+		List list = null;
+		List<Map<String , String>> listMap = new ArrayList();
+		Map mapTemp = new HashMap();
+		
+		String id = experimbatchs.getId();
+		String experim_name = experimbatchs.getExperim_name();
+		String batch = experimbatchs.getBatch();
+		String start_week = experimbatchs.getStart_week();
+		String last_week = experimbatchs.getLast_week();
+		String laboratory_id = experimbatchs.getLaboratory_id();	
+		String status = experimbatchs.getStatus();
+		String sql = "insert into t_experimbatch(id,experim_name,batch,start_week,last_week,laboratory_id,status)value('"+id+"','"+experim_name+"','"+batch+"','"+start_week+"','"+last_week+"','"+laboratory_id+"','"+status+"')";
+		try {
+			jdbcTemplate.execute(sql);
+			mapTemp.put("code", "1");
+			mapTemp.put("res", "添加成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			mapTemp.put("code", "0");
+			mapTemp.put("res", "添加成功");
+		}
+		listMap.add(mapTemp);
+		 return listMap;
+	}
+	
+	//查询的实验批次，新
+	@Override
+	public List<Map<String, String>> quryExperimbatchs(String laboratory_id) {
+		List list = null;
+		List<Map<String,String>> listMap = new ArrayList();
+		String sql= "select e.id,e.experim_name,e.batch,e.start_week,e.last_week,e.laboratory_id,j.laboratory_name "
+				+ "from t_experimbatch e,t_jiaoshiinfor j "
+				+ "where  e.laboratory_id = '"+laboratory_id+"' and e.laboratory_id = j.id"; 
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
+	}
+	
+	//删除的实验批次，新
+	@Override
+	public List<Map<String, String>> deleteExperimbatchs(String id) {
+		List list = null;
+		List<Map<String , String>> listMap = new ArrayList();
+		Map mapTemp = new HashMap();
+		String sql = "DELETE FROM  t_experimbatch where id = '"+id+"'";
+		
+		try {
+			jdbcTemplate.execute(sql);
+			mapTemp.put("code", "1");
+			mapTemp.put("res", "删除成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			mapTemp.put("code", "0");
+			mapTemp.put("res", "删除失败");
+		}
+		listMap.add(mapTemp);
+		System.err.println(listMap);
 		 return listMap;
 	}
 	
