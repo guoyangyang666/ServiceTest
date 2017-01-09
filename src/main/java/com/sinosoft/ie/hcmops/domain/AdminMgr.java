@@ -33,16 +33,13 @@ public interface AdminMgr {
 	//查看个人基本信息,入参是管理员工号
 	public List queryLabAdminInfo(String staff_id);
 	//查看实验室课表
-	public List<Map<String, String>> quryAllCourse(String laboratory_id);
-	//查询实验室课表及添加的实验批次
-	public List<Map<String, String>> quryCourseExperim(String laboratory_id);
+	public List<Map<String, String>> quryAllCourse(String laboratory_id);	
 	//添加的实验批次，新
 	public List<Map<String, String>> addExperimbatchs(Experimbatchs experimbatchs);
 	//查询的实验批次，新
 	public List<Map<String, String>> quryExperimbatchs(String laboratory_id);
 	//删除的实验批次，新
 	public List<Map<String, String>> deleteExperimbatchs(String id);
-	//实验室管理员根据课表添加实验批次,入参为实验室id
-	public List<Map<String, String>> addLabExperim(ExperimBatch experimBatch);
+	
 	
 }

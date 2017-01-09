@@ -7,15 +7,18 @@ package com.sinosoft.ie.hcmops.model;
 public class ExperimBatch {
 	private String id;//实验室管理员添加实验批次，id
 	private String course_id;//课程id
+	private String experim_id;//实验批次名（什么实验）
+	private String batch;//实验批次
 	private String week;//星期数，数组j的值
 	private String start_times;//开始课时，数组i的值
 	private String stop_times;//持续课时，
-	private String course_name;//实验批次名（什么实验）
 	private String start_week;//开始周数
 	private String last_week;//持续周数
 	private String laboratory_id;//对应的实验室
-	private String batch;//实验批次
-	private String type;//类型，1为实验室的课，2为实验室管理添加的实验室批次
+	private String appoint_week;//预约的周（教师）
+	private String staff_id;//教师工号
+	private String type;//类型，1为实验室的课，2为教师确认的批次，其他教师不可选
+	private String status;//1为普通的课程。教师确认批次的状态，（1为已预约，2为取消，3为删除）
 	public String getId() {
 		return id;
 	}
@@ -39,12 +42,6 @@ public class ExperimBatch {
 	}
 	public void setStop_times(String stop_times) {
 		this.stop_times = stop_times;
-	}
-	public String getCourse_name() {
-		return course_name;
-	}
-	public void setCourse_name(String course_name) {
-		this.course_name = course_name;
 	}
 	public String getStart_week() {
 		return start_week;
@@ -82,6 +79,30 @@ public class ExperimBatch {
 	}
 	public void setBatch(String batch) {
 		this.batch = batch;
+	}
+	public String getExperim_id() {
+		return experim_id;
+	}
+	public void setExperim_id(String experim_id) {
+		this.experim_id = experim_id;
+	}
+	public String getAppoint_week() {
+		return appoint_week;
+	}
+	public void setAppoint_week(String appoint_week) {
+		this.appoint_week = appoint_week;
+	}
+	public String getStaff_id() {
+		return staff_id;
+	}
+	public void setStaff_id(String staff_id) {
+		this.staff_id = staff_id;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 	

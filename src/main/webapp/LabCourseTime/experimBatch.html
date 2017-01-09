@@ -9,7 +9,9 @@
 		<link rel="stylesheet" href="./common.css"/>
 	</head>
 	<body>
-	
+	<div>
+		djkdfjdk
+	</div>
     <script type="text/javascript">
     
     	var laboratory_id = localStorage.getItem('laboratoryId');//获取当前管理员操作的实验室id
@@ -17,7 +19,7 @@
     	//调取课表
     	$.ajax({
     		type : "post",
-           	url: "http://127.0.0.1:9999/hc-mops/labAdmin/quryCourseExperim.do",
+           	url: "http://127.0.0.1:9999/hc-mops/teacher/quryCourseExperim.do",
            	async:false, //调整为同步请求
    			dataType: "json",
    			data:{
@@ -190,34 +192,7 @@ function course(arr2){
  	 	
  	 }
  	  
- 	 /* function ok(){
- 		var w,h,className;
-		function getSrceenWH(){
-			w = $(window).width();
-			h = $(window).height();
-			$('#dialogBgOk').width(w).height(h);
-		}
-		
-		window.onresize = function(){  
-			getSrceenWH();
-		}  
-		$(window).resize();  
-		$(function(){
-			getSrceenWH();
-			
-			//显示弹框
-				className = $(this).attr('class');
-				$('#dialogBgOk').fadeIn(300);
-				$('#dialogOk').removeAttr('class').addClass('animated '+className+'').fadeIn();
-			
-			//关闭弹窗
-			$('.claseDialogBtn').click(function(){
-				$('#dialogBgOk').fadeOut(300,function(){
-					$('#dialogOk').addClass('bounceOutUp').fadeOut();
-				});
-			});
-		});
- 	 } */
+ 	 
 	</script>
 	
 </body>

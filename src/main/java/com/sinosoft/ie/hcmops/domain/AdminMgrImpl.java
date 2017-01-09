@@ -171,53 +171,9 @@ public class AdminMgrImpl implements AdminMgr {
 		return list;
 	}
 	
-	//实验室管理员根据课表添加实验批次,入参为实验室id
-	@Override
-	public List<Map<String, String>> addLabExperim(ExperimBatch experimBatch) {
-		List list = null;
-		List<Map<String , String>> listMap = new ArrayList();
-		Map mapTemp = new HashMap();
-		
-		String id = experimBatch.getId();
-		String week = experimBatch.getWeek();
-		String start_times = experimBatch.getStart_times();
-		String stop_times = experimBatch.getStop_times();
-		String course_name = experimBatch.getCourse_name();
-		String start_week = experimBatch.getStart_week();//
-		String last_week = experimBatch.getLast_week();//
-		String laboratory_id = experimBatch.getLaboratory_id();//
-		String type = experimBatch.getType();
-		String batch = experimBatch.getBatch();
-		String sql = "insert into t_course_time(id,week,start_times,stop_times,course_name,start_week,last_week,laboratory_id,batch,type)value('"+id+"','"+week+"','"+start_times+"','"+stop_times+"','"+course_name+"','"+start_week+"','"+last_week+"','"+laboratory_id+"','"+batch+",'"+type+"')";
-		try {
-			jdbcTemplate.execute(sql);
-			mapTemp.put("code", "1");
-			mapTemp.put("res", "添加成功");
-		} catch (Exception e) {
-			e.printStackTrace();
-			mapTemp.put("code", "0");
-			mapTemp.put("res", "添加成功");
-		}
-		listMap.add(mapTemp);
-		 return listMap;
-	}
 	
-	//查询实验室课表及添加的实验批次
-	@Override
-	public List<Map<String, String>> quryCourseExperim(String laboratory_id) {
-		List list = null;
-		List<Map<String,String>> listMap = new ArrayList();
-		String sql= "select ct.id,ct.week,ct.course_name,start_times,ct.stop_times,ct.start_week,ct.last_week,ct.start_time,ct.stop_time,ct.type,co.courses_name "
-				+ "from t_course_time ct,t_course co "
-				+ "where  ct.laboratory_id = '"+laboratory_id+"' and ct.course_id = co.id"; 
-		try {
-			list = jdbcTemplate.queryForList(sql);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		System.err.println(list);
-		return list;
-	}
+	
+	
 	
 	//添加的实验批次
 	@Override

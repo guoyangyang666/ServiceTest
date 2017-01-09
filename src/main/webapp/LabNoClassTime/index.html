@@ -35,7 +35,45 @@ var _hmt = _hmt || [];
 </head>
 <body>
 <div class="wrap contain-c">
-    
+    <!-- 预约信息筛选区 -->
+    <div class="bz-panel bz-panel-default" style="text-align: center;">
+        
+        <div class="bz-panel-bd">
+            <div class="bz-form bz-form-aligned">
+                <div class="bz-control-group">
+                    <label for="moudle"><em>请选择查询筛选条件：</em></label>
+                    <select name="tid" onchange="javascript:getroom();" id="tid">
+                        <option value="0">请选择实验模块</option>
+                                                    <option value="1">硬件实验室</option>
+                                                    <option value="2">软件实验室</option>
+                                                    <option value="3">通信实验室</option>
+                                                    <option value="4">信安实验室</option>
+                                                    <option value="5">物联网实验室</option>
+                                            </select>&nbsp;
+                    <select name="room" id="room">
+                        <option value="0">请选择实验室</option>
+                    </select>&nbsp;
+                    <button class="bz-button bz-button-primary" onclick="javascript:goSearch();">
+                        <i class="iconfont icon-search"></i> 查询
+                    </button>
+                </div>
+            </div>
+                            <ul class="bz-pagination" style="text-align: center;">
+                  <li>请选择预约周次：</li>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <li class="bz-active"><a href="http://cclab.ujs.edu.cn/m/1/3/16">16</a></li>
+                                                                                  <li><a href="http://cclab.ujs.edu.cn/m/1/3/17">17</a></li>
+                                                                                  <li><a href="http://cclab.ujs.edu.cn/m/1/3/18">18</a></li>
+                                                                                  <li><a href="http://cclab.ujs.edu.cn/m/1/3/19">19</a></li>
+                                                                                  <li><a href="http://cclab.ujs.edu.cn/m/1/3/20">20</a></li>
+                                                      </ul>
+                    </div>
+        <div class="bz-panel-hd">
+            <strong>
+                当前第 <code>15</code> 周（日期：2016-12-05 ~ 2016-12-11）
+                                    正在查询<code>硬件实验室：205</code>，预约周次：第 <code>16</code> 周（2016-12-12 ~ 2016-12-18）
+                            </strong>
+        </div>
+    </div>
 
         <!-- 预约筛选查询结果区 -->
     <table id="J_tb" class="bz-table" >

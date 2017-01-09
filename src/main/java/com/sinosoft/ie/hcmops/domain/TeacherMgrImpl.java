@@ -1,10 +1,14 @@
 package com.sinosoft.ie.hcmops.domain;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import com.sinosoft.ie.hcmops.model.ExperimBatch;
 @Service("TeacherMgr")
 public class TeacherMgrImpl implements TeacherMgr {
 	/**
@@ -45,6 +49,127 @@ public class TeacherMgrImpl implements TeacherMgr {
 		// TODO Auto-generated method stub
 		
 	}
-
-
+	//查询实验室课表及添加的实验批次
+	@Override
+	public List<Map<String, String>> quryCourseExperim(String laboratory_id, String current_week) {
+		List list = null;
+		List<Map<String,String>> listMap = new ArrayList();
+		String sql= "select * "
+				+ "from t_course_time "
+				+ "where  laboratory_id = '"+laboratory_id+"' and '"+current_week+"'>=start_week and "+current_week+"<=last_week"; 
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
+	}
+	
+	//查询实验室管理员添加的实验名
+	@Override
+	public List<Map<String, String>> quryExperimName(String laboratory_id) {
+		List list = null;
+		String sql="select * from t_experimbatch_name where laboratory_id = '"+laboratory_id+"'";
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
+	}
+	//通过实验名查询所有的实验批次,当前周
+	@Override
+	public List<Map<String, String>> quryExperims(String laboratory_id, String experim_id, String current_week) {
+		List list = null;
+		String sql="select * from t_experimbatch where experim_id = '"+experim_id+"' and laboratory_id = '"+laboratory_id+"' and '"+current_week+"'>=start_week and '"+current_week+"'<=last_week";
+		System.out.println(sql);
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
+	}
+	//教师根据课表添加实验批次
+	@Override
+	public List<Map<String, String>> addLabExperim(ExperimBatch experimBatch) {
+		List list = null;
+		List<Map<String , String>> listMap = new ArrayList();
+		Map mapTemp = new HashMap();
+		
+		String id = experimBatch.getId();
+		String experim_id = experimBatch.getExperim_id();
+		String batch = experimBatch.getBatch();
+		String week = experimBatch.getWeek();
+		String start_times = experimBatch.getStart_times();
+		String stop_times = experimBatch.getStop_times();
+		String appoint_week = experimBatch.getAppoint_week();//预约的周（教师）
+		String staff_id = experimBatch.getStaff_id();
+		String laboratory_id = experimBatch.getLaboratory_id();//
+		String type = experimBatch.getType();//类型，1为实验室的课，2为教师确认的批次，其他教师不可选
+		String status = experimBatch.getStatus();//1为普通的课程。教师确认批次的状态，（1为已预约，2为取消，3为删除）
+		String sql = "insert into t_course_time(id,experim_id,batch,week,start_times,stop_times,appoint_week,staff_id,laboratory_id,type,status)value('"+id+"','"+experim_id+"','"+batch+"','"+week+"','"+start_times+"','"+stop_times+"','"+appoint_week+"','"+staff_id+"','"+laboratory_id+"','"+type+"','"+status+"')";
+		try {
+			jdbcTemplate.execute(sql);
+			mapTemp.put("code", "1");
+			mapTemp.put("res", "添加成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			mapTemp.put("code", "0");
+			mapTemp.put("res", "添加成功");
+		}
+		listMap.add(mapTemp);
+		 return listMap;
+	}
+	//查看教师自己的所有预约记录
+	@Override
+	public List<Map<String, String>> quryAppointList(String staff_id) {
+		List list = null;
+		String sql="select * from t_course_time where staff_id = '"+staff_id+"' and type = 2 and status = 1";
+		System.out.println(sql);
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
+	}
+	//教师取消预约记录
+	@Override
+	public List<Map<String, String>> cancelAppoint(String staff_id, String id) {
+		List list = null;
+		String sql="update t_course_time set status ='2'  where staff_id = '"+staff_id+"' and id = '"+id+"' and type = 2 ";
+		System.out.println(sql);
+		try {
+			jdbcTemplate.update(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
+	}
+	
+	//查看教师自己所有取消的记录
+	@Override
+	public List<Map<String, String>> cancelAppointList(String staff_id) {
+		List list = null;
+		String sql="select * from t_course_time where staff_id = '"+staff_id+"' and type = 2 and status = 2";
+		System.out.println(sql);
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
+	}
+	
+	
+	
+	
+	
 }

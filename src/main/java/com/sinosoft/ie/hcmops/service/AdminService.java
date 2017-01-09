@@ -196,44 +196,8 @@ public class AdminService {
 			return json;		
 		}
 		
-		//添加本实验室的设备
-		@RequestMapping(value = "/addLabExperim.do", method = { RequestMethod.GET,RequestMethod.POST })
-		public @ResponseBody String addLabExperim(HttpServletRequest request,
-				String week, String start_times, String stop_times,
-				String course_name, String start_week, String last_week, String laboratory_id, String type,			
-				ModelMap modelMap, HttpServletResponse resp) {
-			String s = null;
-			JSONObject callback = new JSONObject();
-			ExperimBatch experimBatch = new ExperimBatch();
-			String id = UUID.randomUUID().toString();
-			experimBatch.setId(id);
-			experimBatch.setWeek(week);
-			experimBatch.setStart_times(start_times);
-			experimBatch.setStop_times(stop_times);
-			experimBatch.setCourse_name(course_name);
-			experimBatch.setStart_week(start_week);
-			experimBatch.setLast_week(last_week);
-			experimBatch.setLaboratory_id(laboratory_id);
-			experimBatch.setType(type);
-			List list = adminMgr.addLabExperim(experimBatch);			
-			String json = JSONArray.fromObject(list).toString();
-			 System.out.println("-----------------------------------------");
-			 System.out.println(json);
-			 System.out.println("-----------------------------------------");
-			return json;		
-		}
-		//查看实验室课表
-		@RequestMapping(value = "/quryCourseExperim.do", method = { RequestMethod.GET,RequestMethod.POST })
-		public @ResponseBody String quryCourseExperim(HttpServletRequest request,
-				String laboratory_id, ModelMap modelMap, HttpServletResponse resp) {
-			String s = null;
-			 List list = adminMgr.quryCourseExperim(laboratory_id);
-			 String json = JSONArray.fromObject(list).toString();
-			 System.out.println("-----------------------------------------");
-			 System.out.println(json);
-			 System.out.println("-----------------------------------------");
-			return json;		
-		}
+		
+		
 		//添加本实验批次
 		@RequestMapping(value = "/addExperimbatchs.do", method = { RequestMethod.GET,RequestMethod.POST })
 		public @ResponseBody String addExperimbatchs(HttpServletRequest request,
