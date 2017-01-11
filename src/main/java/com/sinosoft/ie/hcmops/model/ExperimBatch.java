@@ -19,6 +19,7 @@ public class ExperimBatch {
 	private String staff_id;//教师工号
 	private String type;//类型，1为实验室的课，2为教师确认的批次，其他教师不可选
 	private String status;//1为普通的课程。教师确认批次的状态，（1为已预约，2为取消，3为删除）
+	private Integer experim_num;//预约的人数，与实验室容量对比
 	public String getId() {
 		return id;
 	}
@@ -104,6 +105,13 @@ public class ExperimBatch {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+	public Integer getExperim_num() {
+		return experim_num;
+	}
+	public void setExperim_num(Integer experim_num) {
+		this.experim_num = experim_num;
+	}
+	
 	
 	
 
