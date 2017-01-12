@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import com.sinosoft.ie.hcmops.model.ExperimBatch;
+import com.sinosoft.ie.hcmops.model.StuExperim;
 import com.sinosoft.ie.hcmops.model.StudentsStu;
 import com.sinosoft.ie.mpiws.model.PersonInfo;
 /**
@@ -94,5 +96,55 @@ public class StudentsMgrImpl implements StudentsMgr {
 		System.out.println(list);
 		return list;
 	}
-
+	
+	
+	//学生预约实验室
+	@Override
+	public List<Map<String, String>> addStuExperim(StuExperim stuExperim,Integer experim_num) {
+		List list = null;
+		String sql1;
+		sql1 = "update t_course_time set experim_num = '"+experim_num+"' where id = '"+stuExperim.getCourse_time_id()+"'";
+		jdbcTemplate.update(sql1);
+		
+		List<Map<String , String>> listMap = new ArrayList();
+		Map mapTemp = new HashMap();		
+		String id = stuExperim.getId();
+		String stu_id = stuExperim.getStu_id();
+		String course_time_id = stuExperim.getCourse_time_id();
+		String laboratory_id = stuExperim.getLaboratory_id();
+		String staff_id = stuExperim.getStaff_id();
+		String status = stuExperim.getStatus();
+		String sql = "insert into t_stu_experim(id,stu_id,course_time_id,laboratory_id,status,staff_id)value('"+id+"','"+stu_id+"','"+course_time_id+"','"+laboratory_id+"','"+status+"','"+staff_id+"')";
+		try {
+			jdbcTemplate.execute(sql);
+			mapTemp.put("code", "1");
+			mapTemp.put("res", "添加成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			mapTemp.put("code", "0");
+			mapTemp.put("res", "添加成功");
+		}
+		listMap.add(mapTemp);
+		 return listMap;
+	}
+	
+	
+	//学生查询所有的能预约的实验室，并可查询：实验室名，教师名，实验名，上课时间，
+	@Override
+	public List<Map<String, String>> quryAllExperim(String current_week) {
+		List list = null;
+		
+		String sql="select ct.id,en.experim_name,ct.batch,ct.laboratory_id,j.laboratory_name,j.laboratory_adress,j.laboratory_adressnum,ct.staff_id,s.staff_name,ct.experim_num,ct.appoint_week,"
+				+ "ct.week,ct.start_times,ct.stop_times,j.laboratory_renshu "
+				+ "from t_course_time ct,t_jiaoshiinfor j,t_staff s,t_experimbatch_name en "
+				+ "where ct.experim_id = en.id and ct.laboratory_id = j.id and ct.staff_id = s.id and ct.type=2 and ct.status=1 and ct.appoint_week = '"+current_week+"'";
+		System.out.println(sql);
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
+	}
 }

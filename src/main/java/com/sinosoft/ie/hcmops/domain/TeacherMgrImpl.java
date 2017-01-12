@@ -111,6 +111,7 @@ public class TeacherMgrImpl implements TeacherMgr {
 		String laboratory_id = experimBatch.getLaboratory_id();//
 		String type = experimBatch.getType();//类型，1为实验室的课，2为教师确认的批次，其他教师不可选
 		String status = experimBatch.getStatus();//1为普通的课程。教师确认批次的状态，（1为已预约，2为取消，3为删除）
+		Integer experim_num = experimBatch.getExperim_num();////预约的人数，与实验室容量对比
 		String sql = "insert into t_course_time(id,experim_id,batch,week,start_times,stop_times,appoint_week,staff_id,laboratory_id,type,status)value('"+id+"','"+experim_id+"','"+batch+"','"+week+"','"+start_times+"','"+stop_times+"','"+appoint_week+"','"+staff_id+"','"+laboratory_id+"','"+type+"','"+status+"')";
 		try {
 			jdbcTemplate.execute(sql);
@@ -128,7 +129,9 @@ public class TeacherMgrImpl implements TeacherMgr {
 	@Override
 	public List<Map<String, String>> quryAppointList(String staff_id) {
 		List list = null;
-		String sql="select * from t_course_time where staff_id = '"+staff_id+"' and type = 2 and status = 1";
+		String sql="select ct.id,ct.week,ct.batch,ct.start_times,ct.stop_times,ct.appoint_week,en.experim_name,j.laboratory_name,j.laboratory_adress,j.laboratory_adressnum "
+				+ "from t_course_time ct,t_experimbatch_name en,t_jiaoshiinfor j "
+				+ "where ct.staff_id = '"+staff_id+"' and ct.type = 2 and ct.status = 1 and ct.experim_id = en.id and ct.laboratory_id = j.id";
 		System.out.println(sql);
 		try {
 			list = jdbcTemplate.queryForList(sql);
@@ -140,24 +143,33 @@ public class TeacherMgrImpl implements TeacherMgr {
 	}
 	//教师取消预约记录
 	@Override
-	public List<Map<String, String>> cancelAppoint(String staff_id, String id) {
+	public List<Map<String, String>> cancelAppoint(String staff_id, String id,String cancel_reason) {
 		List list = null;
-		String sql="update t_course_time set status ='2'  where staff_id = '"+staff_id+"' and id = '"+id+"' and type = 2 ";
+		List<Map<String , String>> listMap = new ArrayList();
+		Map mapTemp = new HashMap();
+		String sql="update t_course_time set status ='2',cancel_reason = '"+cancel_reason+"' where staff_id = '"+staff_id+"' and id = '"+id+"' and type = 2 ";
 		System.out.println(sql);
 		try {
 			jdbcTemplate.update(sql);
+			mapTemp.put("code", "1");
+			mapTemp.put("res", "取消成功");
 		} catch (Exception e) {
 			e.printStackTrace();
+			mapTemp.put("code", "1");
+			mapTemp.put("res", "取消失败");
 		}
+		listMap.add(mapTemp);
 		System.err.println(list);
-		return list;
+	    return listMap;
 	}
 	
 	//查看教师自己所有取消的记录
 	@Override
 	public List<Map<String, String>> cancelAppointList(String staff_id) {
 		List list = null;
-		String sql="select * from t_course_time where staff_id = '"+staff_id+"' and type = 2 and status = 2";
+		String sql="select ct.id,ct.week,ct.batch,ct.start_times,ct.stop_times,ct.appoint_week,ct.cancel_reason,en.experim_name,j.laboratory_name,j.laboratory_adress,j.laboratory_adressnum "
+				+ "from t_course_time ct,t_experimbatch_name en,t_jiaoshiinfor j "
+				+ "where ct.staff_id = '"+staff_id+"' and ct.type = 2 and ct.status = 2 and ct.experim_id = en.id and ct.laboratory_id = j.id";
 		System.out.println(sql);
 		try {
 			list = jdbcTemplate.queryForList(sql);

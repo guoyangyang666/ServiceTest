@@ -27,7 +27,7 @@ public interface TeacherMgr {
 	//查看教师自己的所有预约记录
 	public List<Map<String, String>> quryAppointList(String staff_id);
 	//教师取消预约记录
-	public List<Map<String, String>> cancelAppoint(String staff_id,String id);
+	public List<Map<String, String>> cancelAppoint(String staff_id,String id,String cancel_reason);
 	//查看教师自己所有取消的记录
 	public List<Map<String, String>> cancelAppointList(String staff_id);
 	//删除已预约的记录

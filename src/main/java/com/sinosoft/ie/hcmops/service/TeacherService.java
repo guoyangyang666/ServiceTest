@@ -100,7 +100,7 @@ public class TeacherService {
 			 System.out.println("-----------------------------------------");
 			return json;		
 		}
-		//添加本实验室的设备
+		//教师根据课表添加实验批次
 		@RequestMapping(value = "/addLabExperim.do", method = { RequestMethod.GET,RequestMethod.POST })
 		public @ResponseBody String addLabExperim(HttpServletRequest request,
 				String experim_id,String batch,String week, String start_times, String stop_times,
@@ -122,7 +122,8 @@ public class TeacherService {
 			String status = "1";
 			experimBatch.setStatus(status);//教师确认批次的状态，（1为已预约，2为取消，3为删除）
 			String type = "2";
-			experimBatch.setType(type);//类型，1为实验室的课，2为教师确认的批次，其他教师不可选
+			experimBatch.setType(type);//类型，1为实验室的课，2为教师确认的批次，其他教师不可选			
+			Integer experim_num = 0;//预约的人数，与实验室容量对比
 			List list = teacherMgr.addLabExperim(experimBatch);		
 			String json = JSONArray.fromObject(list).toString();
 			 System.out.println("-----------------------------------------");
@@ -143,12 +144,12 @@ public class TeacherService {
 			return json;		
 		}
 		
-		//查看教师自己所有取消的记录
+		//教师取消预约记录
 		@RequestMapping(value = "/cancelAppoint.do", method = { RequestMethod.GET,RequestMethod.POST })
 		public @ResponseBody String cancelAppoint(HttpServletRequest request,
-				String staff_id,String id, ModelMap modelMap, HttpServletResponse resp) {
+				String staff_id,String id,String cancel_reason, ModelMap modelMap, HttpServletResponse resp) {
 			String s = null;
-			 List list = teacherMgr.cancelAppoint(staff_id, id);
+			 List list = teacherMgr.cancelAppoint(staff_id, id, cancel_reason);
 			 String json = JSONArray.fromObject(list).toString();
 			 System.out.println("-----------------------------------------");
 			 System.out.println(json);
