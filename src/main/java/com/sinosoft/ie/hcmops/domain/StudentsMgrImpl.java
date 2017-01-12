@@ -147,4 +147,24 @@ public class StudentsMgrImpl implements StudentsMgr {
 		System.err.println(list);
 		return list;
 	}
+	
+	
+	//学生查询自己预约的实验室,包括已预约的和未审核的。
+	@Override
+	public List<Map<String, String>> quryStuExperim(String stu_id) {
+		List list = null;
+		
+		String sql="select se.id,se.course_time_id,se.laboratory_id,se.staff_id,se.status,en.experim_name,ct.batch,ct.laboratory_id,j.laboratory_name,j.laboratory_adress,j.laboratory_adressnum,ct.staff_id,s.staff_name,ct.appoint_week,"
+				+ "ct.week,ct.start_times,ct.stop_times "
+				+ "from t_course_time ct,t_jiaoshiinfor j,t_staff s,t_experimbatch_name en,t_stu_experim se "
+				+ "where se.stu_id = '"+stu_id+"' and se.course_time_id = ct.id and ct.experim_id = en.id and se.laboratory_id = j.id and se.staff_id = s.id and se.status<>'3'";
+		System.out.println(sql);
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
+	}
 }

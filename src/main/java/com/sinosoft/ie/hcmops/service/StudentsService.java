@@ -101,4 +101,17 @@ public class StudentsService {
 		 System.out.println("-----------------------------------------");
 		return json;		
 	}
+	
+	//学生查询自己预约的实验室,包括已预约的和未审核的。
+	@RequestMapping(value = "/quryStuExperim.do", method = { RequestMethod.GET,RequestMethod.POST })
+	public @ResponseBody String quryStuExperim(HttpServletRequest request,
+			String stu_id, ModelMap modelMap, HttpServletResponse resp) {
+		String s = null;
+		 List list = studentsMgr.quryStuExperim(stu_id);
+		 String json = JSONArray.fromObject(list).toString();
+		 System.out.println("-----------------------------------------");
+		 System.out.println(json);
+		 System.out.println("-----------------------------------------");
+		return json;		
+	}
 }

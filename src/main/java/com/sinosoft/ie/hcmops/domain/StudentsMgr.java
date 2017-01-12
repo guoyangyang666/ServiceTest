@@ -24,4 +24,6 @@ public interface StudentsMgr {
 	public List<Map<String, String>> addStuExperim(StuExperim stuExperim,Integer experim_num);
 	//学生查询所有的能预约的实验室，并可查询：实验室名，教师名，实验名，上课时间，
 	public List<Map<String, String>> quryAllExperim(String current_week);
+	//学生查询自己预约的实验室,包括已预约的和未审核的。
+	public List<Map<String, String>> quryStuExperim(String stu_id);
 }
