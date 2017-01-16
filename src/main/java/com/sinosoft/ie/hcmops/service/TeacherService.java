@@ -169,4 +169,17 @@ public class TeacherService {
 			 System.out.println("-----------------------------------------");
 			return json;		
 		}
+		
+		//教师查看学生预约的记录
+		@RequestMapping(value = "/quryStuAppoint.do", method = { RequestMethod.GET,RequestMethod.POST })
+		public @ResponseBody String quryStuAppoint(HttpServletRequest request,
+				String staff_id, ModelMap modelMap, HttpServletResponse resp) {
+			String s = null;
+			 List list = teacherMgr.quryStuAppoint(staff_id);
+			 String json = JSONArray.fromObject(list).toString();
+			 System.out.println("-----------------------------------------");
+			 System.out.println(json);
+			 System.out.println("-----------------------------------------");
+			return json;		
+		}
 }

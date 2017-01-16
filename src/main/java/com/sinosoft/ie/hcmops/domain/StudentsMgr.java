@@ -20,10 +20,16 @@ public interface StudentsMgr {
 	public List<Map<String, String>> updatePassword(String number, String loginPw, String logintype);
 	//查找学生的个人信息，入参是学生的学号
 	public List queryStudentInfo(String stu_id);
+	//学生预约之前先先查询是否已预约，
+	public List<Map<String, String>> quryStu(String course_time_id,String stu_id);
 	//学生预约实验室
 	public List<Map<String, String>> addStuExperim(StuExperim stuExperim,Integer experim_num);
 	//学生查询所有的能预约的实验室，并可查询：实验室名，教师名，实验名，上课时间，
 	public List<Map<String, String>> quryAllExperim(String current_week);
 	//学生查询自己预约的实验室,包括已预约的和未审核的。
 	public List<Map<String, String>> quryStuExperim(String stu_id);
+	//学生取消预约记录
+	public List<Map<String, String>> cancelAppoint(String stu_id,String id,String cancel_reason,Integer experim_num,String course_time_id);
+	//查询自己所有取消的记录
+	public List<Map<String, String>> cancelAppointList(String stu_id);
 }

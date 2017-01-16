@@ -65,6 +65,19 @@ public class StudentsService {
 		return json;		
 	}
 	
+	//学生预约之前先先查询是否已预约，
+	@RequestMapping(value = "/quryStu.do", method = { RequestMethod.GET,RequestMethod.POST })
+	public @ResponseBody String quryStu(HttpServletRequest request,
+			String course_time_id,String stu_id, ModelMap modelMap, HttpServletResponse resp) {
+		String s = null;
+		 List list = studentsMgr.quryStu(course_time_id, stu_id);
+		 String json = JSONArray.fromObject(list).toString();
+		 System.out.println("-----------------------------------------");
+		 System.out.println(json);
+		 System.out.println("-----------------------------------------");
+		return json;		
+	}
+	
 	//学生预约实验室
 	@RequestMapping(value = "/addStuExperim.do", method = { RequestMethod.GET,RequestMethod.POST })
 	public @ResponseBody String addStuExperim(HttpServletRequest request,
@@ -79,7 +92,7 @@ public class StudentsService {
 		stuExperim.setCourse_time_id(course_time_id);
 		stuExperim.setLaboratory_id(laboratory_id);
 		stuExperim.setStaff_id(staff_id);
-		String status = "1";
+		String status = "2";
 		stuExperim.setStatus(status);//（1为已预约，2为取消，3为删除）		
 		List list = studentsMgr.addStuExperim(stuExperim, experim_num);
 		String json = JSONArray.fromObject(list).toString();
@@ -108,6 +121,32 @@ public class StudentsService {
 			String stu_id, ModelMap modelMap, HttpServletResponse resp) {
 		String s = null;
 		 List list = studentsMgr.quryStuExperim(stu_id);
+		 String json = JSONArray.fromObject(list).toString();
+		 System.out.println("-----------------------------------------");
+		 System.out.println(json);
+		 System.out.println("-----------------------------------------");
+		return json;		
+	}
+	
+	//学生取消预约记录
+	@RequestMapping(value = "/cancelAppoint.do", method = { RequestMethod.GET,RequestMethod.POST })
+	public @ResponseBody String cancelAppoint(HttpServletRequest request,
+			String stu_id,String id,String cancel_reason,Integer experim_num,String course_time_id, ModelMap modelMap, HttpServletResponse resp) {
+		String s = null;
+		 List list = studentsMgr.cancelAppoint(stu_id, stu_id, cancel_reason, experim_num, course_time_id);
+		 String json = JSONArray.fromObject(list).toString();
+		 System.out.println("-----------------------------------------");
+		 System.out.println(json);
+		 System.out.println("-----------------------------------------");
+		return json;		
+	}
+	
+	//查看教师自己所有取消的记录
+	@RequestMapping(value = "/cancelAppointList.do", method = { RequestMethod.GET,RequestMethod.POST })
+	public @ResponseBody String cancelAppointList(HttpServletRequest request,
+			String stu_id, ModelMap modelMap, HttpServletResponse resp) {
+		String s = null;
+		 List list = studentsMgr.cancelAppointList(stu_id);
 		 String json = JSONArray.fromObject(list).toString();
 		 System.out.println("-----------------------------------------");
 		 System.out.println(json);

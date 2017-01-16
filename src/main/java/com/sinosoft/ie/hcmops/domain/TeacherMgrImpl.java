@@ -179,9 +179,22 @@ public class TeacherMgrImpl implements TeacherMgr {
 		System.err.println(list);
 		return list;
 	}
-	
-	
-	
-	
+	//教师查看学生预约的记录
+	@Override
+	public List<Map<String, String>> quryStuAppoint(String staff_id) {
+		List list = null;
+		String sql="select se.id,se.stu_id,se.course_time_id,se.laboratory_id,j.laboratory_name,j.laboratory_renshu,s.stu_name,en.experim_name,ct.batch,ct.experim_num,se.status "
+				+ "from t_stu_experim se,t_jiaoshiinfor j,t_course_time ct,t_stu s,t_experimbatch_name en "
+				+ "where se.staff_id='"+staff_id+"' and se.status<>3 and se.laboratory_id=j.id and se.stu_id=s.id and ct.experim_id=en.id and se.course_time_id=ct.id";
+				
+		System.out.println(sql);
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
+	}
 	
 }

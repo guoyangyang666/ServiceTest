@@ -32,4 +32,6 @@ public interface TeacherMgr {
 	public List<Map<String, String>> cancelAppointList(String staff_id);
 	//删除已预约的记录
 //	public List<Map<String, String>> cancelAppointList(String staff_id);
+	//教师查看学生预约的记录
+	public List<Map<String, String>> quryStuAppoint(String staff_id);
 }
