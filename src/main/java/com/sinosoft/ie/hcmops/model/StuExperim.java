@@ -9,9 +9,10 @@ public class StuExperim {
 	private String stu_id;//学生学号
 	private String course_time_id;//预约的id(实验室时间表)t_course_time
 	private String laboratory_id;//实验室编号
-	private String status;//（1为已预约，2为取消，3为删除）
+	private String status;//（1为审核成功，2为审核中，3为取消）
 	private String cancel_reason;//取消原因
 	private String staff_id;//教师id
+	private String state;//1为正常，0为删除
 	public String getId() {
 		return id;
 	}
@@ -53,6 +54,12 @@ public class StuExperim {
 	}
 	public void setStaff_id(String staff_id) {
 		this.staff_id = staff_id;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
 	}
 	
 }

@@ -93,7 +93,9 @@ public class StudentsService {
 		stuExperim.setLaboratory_id(laboratory_id);
 		stuExperim.setStaff_id(staff_id);
 		String status = "2";
-		stuExperim.setStatus(status);//（1为已预约，2为取消，3为删除）		
+		stuExperim.setStatus(status);//（1为已预约，2为取消，3为删除）
+		String state = "1";
+		stuExperim.setState(state);//1为正常，0为删除
 		List list = studentsMgr.addStuExperim(stuExperim, experim_num);
 		String json = JSONArray.fromObject(list).toString();
 		 System.out.println("-----------------------------------------");
@@ -133,7 +135,10 @@ public class StudentsService {
 	public @ResponseBody String cancelAppoint(HttpServletRequest request,
 			String stu_id,String id,String cancel_reason,Integer experim_num,String course_time_id, ModelMap modelMap, HttpServletResponse resp) {
 		String s = null;
-		 List list = studentsMgr.cancelAppoint(stu_id, stu_id, cancel_reason, experim_num, course_time_id);
+		System.out.println("333333333333333333333333333");
+		System.out.println(experim_num);
+		System.out.println("333333333333333333333333333");
+		 List list = studentsMgr.cancelAppoint(stu_id, id, cancel_reason, experim_num, course_time_id);
 		 String json = JSONArray.fromObject(list).toString();
 		 System.out.println("-----------------------------------------");
 		 System.out.println(json);
@@ -141,7 +146,7 @@ public class StudentsService {
 		return json;		
 	}
 	
-	//查看教师自己所有取消的记录
+	//查看自己所有取消的记录
 	@RequestMapping(value = "/cancelAppointList.do", method = { RequestMethod.GET,RequestMethod.POST })
 	public @ResponseBody String cancelAppointList(HttpServletRequest request,
 			String stu_id, ModelMap modelMap, HttpServletResponse resp) {
@@ -153,4 +158,17 @@ public class StudentsService {
 		 System.out.println("-----------------------------------------");
 		return json;		
 	}
+	
+	//学生删除自己取消的记录
+		@RequestMapping(value = "/deleteAppointList.do", method = { RequestMethod.GET,RequestMethod.POST })
+		public @ResponseBody String deleteAppointList(HttpServletRequest request,
+				String id, ModelMap modelMap, HttpServletResponse resp) {
+			String s = null;
+			 List list = studentsMgr.deleteAppointList(id);
+			 String json = JSONArray.fromObject(list).toString();
+			 System.out.println("-----------------------------------------");
+			 System.out.println(json);
+			 System.out.println("-----------------------------------------");
+			return json;		
+		}
 }

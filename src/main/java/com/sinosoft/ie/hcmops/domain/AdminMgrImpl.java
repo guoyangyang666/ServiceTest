@@ -159,9 +159,9 @@ public class AdminMgrImpl implements AdminMgr {
 	public List<Map<String, String>> quryAllCourse(String laboratory_id) {
 		List list = null;
 		List<Map<String,String>> listMap = new ArrayList();
-		String sql= "select ct.id,ct.week,ct.course_name,start_times,ct.stop_times,ct.start_week,ct.last_week,ct.start_time,ct.stop_time,ct.type,co.courses_name "
-				+ "from t_course_time ct,t_course co "
-				+ "where  ct.laboratory_id = '"+laboratory_id+"' and ct.course_id = co.id and type = 1"; 
+		String sql= "select ct.id,ct.week,c.courses_name,start_times,ct.stop_times,ct.start_week,ct.last_week,ct.start_time,ct.stop_time,ct.type,co.courses_name "
+				+ "from t_course_time ct,t_course co,t_course c "
+				+ "where  ct.laboratory_id = '"+laboratory_id+"' and ct.course_id = co.id and ct.course_id = c.id and type = 1"; 
 		try {
 			list = jdbcTemplate.queryForList(sql);
 		} catch (Exception e) {
@@ -208,9 +208,9 @@ public class AdminMgrImpl implements AdminMgr {
 	public List<Map<String, String>> quryExperimbatchs(String laboratory_id) {
 		List list = null;
 		List<Map<String,String>> listMap = new ArrayList();
-		String sql= "select e.id,e.experim_name,e.batch,e.start_week,e.last_week,e.laboratory_id,j.laboratory_name "
-				+ "from t_experimbatch e,t_jiaoshiinfor j "
-				+ "where  e.laboratory_id = '"+laboratory_id+"' and e.laboratory_id = j.id"; 
+		String sql= "select e.id,en.experim_name,e.batch,e.start_week,e.last_week,e.laboratory_id,j.laboratory_name "
+				+ "from t_experimbatch e,t_jiaoshiinfor j,t_experimbatch_name en "
+				+ "where  e.laboratory_id = '"+laboratory_id+"' and e.laboratory_id = j.id and e.experim_id = en.id"; 
 		try {
 			list = jdbcTemplate.queryForList(sql);
 		} catch (Exception e) {

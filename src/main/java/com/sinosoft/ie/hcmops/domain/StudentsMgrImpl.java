@@ -102,7 +102,7 @@ public class StudentsMgrImpl implements StudentsMgr {
 		List list = null;	
 		Map mapTemp = new HashMap();
 		List<Map<String , String>> listMap = new ArrayList();
-		String sql = "SELECT * from t_stu_experim where course_time_id ='"+course_time_id+"' and stu_id ='"+stu_id+"'";
+		String sql = "SELECT * from t_stu_experim where course_time_id ='"+course_time_id+"' and state=1 and stu_id ='"+stu_id+"'";
 				
 		
 		try {
@@ -141,7 +141,8 @@ public class StudentsMgrImpl implements StudentsMgr {
 		String laboratory_id = stuExperim.getLaboratory_id();
 		String staff_id = stuExperim.getStaff_id();
 		String status = stuExperim.getStatus();
-		String sql = "insert into t_stu_experim(id,stu_id,course_time_id,laboratory_id,status,staff_id)value('"+id+"','"+stu_id+"','"+course_time_id+"','"+laboratory_id+"','"+status+"','"+staff_id+"')";
+		String state = stuExperim.getState();
+		String sql = "insert into t_stu_experim(id,stu_id,course_time_id,laboratory_id,status,staff_id,state)value('"+id+"','"+stu_id+"','"+course_time_id+"','"+laboratory_id+"','"+status+"','"+staff_id+"','"+state+"')";
 		try {
 			jdbcTemplate.execute(sql);
 			mapTemp.put("code", "1");
@@ -183,9 +184,9 @@ public class StudentsMgrImpl implements StudentsMgr {
 		List list = null;
 		
 		String sql="select se.id,se.course_time_id,se.laboratory_id,se.staff_id,se.status,en.experim_name,ct.batch,ct.laboratory_id,j.laboratory_name,j.laboratory_adress,j.laboratory_adressnum,ct.staff_id,s.staff_name,ct.appoint_week,"
-				+ "ct.week,ct.start_times,ct.stop_times,st.stu_name,se.stu_id,se.status "
+				+ "ct.week,ct.start_times,ct.stop_times,ct.experim_num,st.stu_name,se.stu_id,se.status "
 				+ "from t_course_time ct,t_jiaoshiinfor j,t_staff s,t_experimbatch_name en,t_stu_experim se,t_stu st "
-				+ "where se.stu_id = '"+stu_id+"' and se.course_time_id = ct.id and ct.experim_id = en.id and se.laboratory_id = j.id and se.staff_id = s.id and se.status<>'3' and se.stu_id=st.id";
+				+ "where se.stu_id = '"+stu_id+"' and se.course_time_id = ct.id and ct.experim_id = en.id and se.laboratory_id = j.id and se.staff_id = s.id and se.status<>'3' and se.state=1 and se.stu_id=st.id";
 		System.out.println(sql);
 		try {
 			list = jdbcTemplate.queryForList(sql);
@@ -199,8 +200,8 @@ public class StudentsMgrImpl implements StudentsMgr {
 	@Override
 	public List<Map<String, String>> cancelAppoint(String stu_id, String id,String cancel_reason,Integer experim_num,String course_time_id) {
 		List list = null;
-		String sql1;
-		sql1 = "update t_course_time set experim_num = '"+experim_num+"' where id = '"+course_time_id+"'";
+		String sql1 = "update t_course_time set experim_num = '"+experim_num+"' where id = '"+course_time_id+"'";
+		System.out.println(sql1);
 		jdbcTemplate.update(sql1);
 		List<Map<String , String>> listMap = new ArrayList();
 		Map mapTemp = new HashMap();
@@ -227,7 +228,7 @@ public class StudentsMgrImpl implements StudentsMgr {
 		String sql="select se.id,se.course_time_id,se.laboratory_id,se.staff_id,se.status,en.experim_name,ct.batch,ct.laboratory_id,j.laboratory_name,j.laboratory_adress,j.laboratory_adressnum,ct.staff_id,s.staff_name,ct.appoint_week,"
 				+ "ct.week,ct.start_times,ct.stop_times,st.stu_name,se.stu_id,se.status "
 				+ "from t_course_time ct,t_jiaoshiinfor j,t_staff s,t_experimbatch_name en,t_stu_experim se,t_stu st "
-				+ "where se.stu_id = '"+stu_id+"' and se.course_time_id = ct.id and ct.experim_id = en.id and se.laboratory_id = j.id and se.staff_id = s.id and se.status='3' and se.stu_id=st.id";
+				+ "where se.stu_id = '"+stu_id+"' and se.course_time_id = ct.id and ct.experim_id = en.id and se.laboratory_id = j.id and se.staff_id = s.id and se.status='3' and se.state=1 and se.stu_id=st.id";
 		System.out.println(sql);
 		try {
 			list = jdbcTemplate.queryForList(sql);
@@ -237,4 +238,26 @@ public class StudentsMgrImpl implements StudentsMgr {
 		System.err.println(list);
 		return list;
 	}
+	
+	//学生删除自己取消的记录
+	@Override
+	public List<Map<String, String>> deleteAppointList(String id) {	
+		List<Map<String , String>> listMap = new ArrayList();
+		Map mapTemp = new HashMap();
+		String sql="update t_stu_experim set state=0 where id = '"+id+"'";
+		System.out.println(sql);
+		try {
+			jdbcTemplate.update(sql);
+			mapTemp.put("code", "1");
+			mapTemp.put("res", "删除成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			mapTemp.put("code", "1");
+			mapTemp.put("res", "删除失败");
+		}
+		listMap.add(mapTemp);
+	    return listMap;
+	}
+	
+	
 }

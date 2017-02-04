@@ -32,4 +32,6 @@ public interface StudentsMgr {
 	public List<Map<String, String>> cancelAppoint(String stu_id,String id,String cancel_reason,Integer experim_num,String course_time_id);
 	//查询自己所有取消的记录
 	public List<Map<String, String>> cancelAppointList(String stu_id);
+	//学生删除自己取消的记录
+	public List<Map<String, String>> deleteAppointList(String id);
 }
