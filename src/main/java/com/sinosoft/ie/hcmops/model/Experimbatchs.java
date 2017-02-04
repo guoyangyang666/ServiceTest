@@ -6,7 +6,7 @@ package com.sinosoft.ie.hcmops.model;
  */
 public class Experimbatchs {
 	private String id;//实验室管理员添加实验批次，id
-	private String experim_name;//实验批次名（什么实验）
+	private String experim_id;//实验批次名id（什么实验）
 	private String start_week;//开始周数
 	private String last_week;//持续周数
 	private String laboratory_id;//对应的实验室
@@ -18,11 +18,11 @@ public class Experimbatchs {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getExperim_name() {
-		return experim_name;
+	public String getExperim_id() {
+		return experim_id;
 	}
-	public void setExperim_name(String experim_name) {
-		this.experim_name = experim_name;
+	public void setExperim_id(String experim_id) {
+		this.experim_id = experim_id;
 	}
 	public String getStart_week() {
 		return start_week;

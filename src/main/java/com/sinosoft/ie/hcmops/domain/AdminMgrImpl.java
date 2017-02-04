@@ -183,13 +183,13 @@ public class AdminMgrImpl implements AdminMgr {
 		Map mapTemp = new HashMap();
 		
 		String id = experimbatchs.getId();
-		String experim_name = experimbatchs.getExperim_name();
+		String experim_id = experimbatchs.getExperim_id();
 		String batch = experimbatchs.getBatch();
 		String start_week = experimbatchs.getStart_week();
 		String last_week = experimbatchs.getLast_week();
 		String laboratory_id = experimbatchs.getLaboratory_id();	
 		String status = experimbatchs.getStatus();
-		String sql = "insert into t_experimbatch(id,experim_name,batch,start_week,last_week,laboratory_id,status)value('"+id+"','"+experim_name+"','"+batch+"','"+start_week+"','"+last_week+"','"+laboratory_id+"','"+status+"')";
+		String sql = "insert into t_experimbatch(id,experim_id,batch,start_week,last_week,laboratory_id,status)value('"+id+"','"+experim_id+"','"+batch+"','"+start_week+"','"+last_week+"','"+laboratory_id+"','"+status+"')";
 		try {
 			jdbcTemplate.execute(sql);
 			mapTemp.put("code", "1");
@@ -240,6 +240,20 @@ public class AdminMgrImpl implements AdminMgr {
 		listMap.add(mapTemp);
 		System.err.println(listMap);
 		 return listMap;
+	}
+	
+	//查找所有的实验批次名
+	@Override
+	public List<Map<String, String>> quryExperimbatchsName(String laboratory_id) {
+		List list = null;
+		String sql = "select id,experim_name from t_experimbatch_name where laboratory_id = '"+laboratory_id+"'";
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
 	}
 	
 	

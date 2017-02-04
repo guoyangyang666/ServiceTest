@@ -40,6 +40,7 @@ public interface AdminMgr {
 	public List<Map<String, String>> quryExperimbatchs(String laboratory_id);
 	//删除的实验批次，新
 	public List<Map<String, String>> deleteExperimbatchs(String id);
-	
+	//查找所有的实验批次名
+	public List<Map<String, String>> quryExperimbatchsName(String laboratory_id);
 	
 }

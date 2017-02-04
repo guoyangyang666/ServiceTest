@@ -201,7 +201,7 @@ public class AdminService {
 		//添加本实验批次
 		@RequestMapping(value = "/addExperimbatchs.do", method = { RequestMethod.GET,RequestMethod.POST })
 		public @ResponseBody String addExperimbatchs(HttpServletRequest request,
-				String experim_name, String batch, String start_week,
+				String experim_id, String batch, String start_week,
 				String last_week, String laboratory_id,			
 				ModelMap modelMap, HttpServletResponse resp) {
 			String s = null;
@@ -209,7 +209,7 @@ public class AdminService {
 			Experimbatchs experimbatchs = new Experimbatchs();
 			String id = UUID.randomUUID().toString();
 			experimbatchs.setId(id);
-			experimbatchs.setExperim_name(experim_name);
+			experimbatchs.setExperim_id(experim_id);
 			experimbatchs.setBatch(batch);
 			experimbatchs.setStart_week(start_week);
 			experimbatchs.setLast_week(last_week);
@@ -243,6 +243,20 @@ public class AdminService {
 				ModelMap modelMap, HttpServletResponse resp) {
 			String s = null;
 			List list = adminMgr.deleteExperimbatchs(id);
+			 String json = JSONArray.fromObject(list).toString();
+			 System.out.println("-----------------------------------------");
+			 System.out.println(json);
+			 System.out.println("-----------------------------------------");
+			return json;		
+		}
+		
+		//查找所有的实验批次名
+		@RequestMapping(value = "/quryExperimbatchsName.do", method = { RequestMethod.GET,RequestMethod.POST })
+		public @ResponseBody String quryExperimbatchsName(HttpServletRequest request,
+				String laboratory_id,
+				ModelMap modelMap, HttpServletResponse resp) {
+			String s = null;
+			List list = adminMgr.quryExperimbatchsName(laboratory_id);
 			 String json = JSONArray.fromObject(list).toString();
 			 System.out.println("-----------------------------------------");
 			 System.out.println(json);
