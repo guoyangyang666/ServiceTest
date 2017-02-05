@@ -44,26 +44,69 @@ public class AdminMgrImpl implements AdminMgr {
 		 list = jdbcTemplate.queryForList(sql1);
 		 return list;
 	}
+	
+	//查询实验室基本信息
 	@Override
-	public List addLabInfo(LabInfo labInfo) {
-		// TODO Auto-generated method stub
+	public List<Map<String, String>> quryLabInfo(String laboratory_id) {
 		List list = null;
-		String id = labInfo.getId();
-		String laboratory_name = labInfo.getLaboratory_name();
-		String category_id = labInfo.getCategory_id();
-		String laboratory_adress = labInfo.getLaboratory_adress();
-		String laboratory_adressnum = labInfo.getLaboratory_adressnum();
-		String staff_id = labInfo.getStaff_id();//从登陆信息里获取
-		String laboratory_renshu = labInfo.getLaboratory_renshu();//从登陆信息里获取
-		String laboratory_desc = labInfo.getLaboratory_desc();//从登陆信息里获取
-		//String sql = "update t_jiaoshiinfor set user_pwd = '"+loginPw+"' where user_name = '"+loginName+"'";
-		String sql = "insert into t_jiaoshiinfor(id,laboratory_name,category_id,laboratory_adress,laboratory_adressnum,staff_id,laboratory_renshu,laboratory_desc)value('"+id+"','"+laboratory_name+"','"+category_id+"','"+laboratory_adress+"','"+laboratory_adressnum+"','"+staff_id+"','"+laboratory_renshu+"','"+laboratory_desc+"')";
-		jdbcTemplate.execute(sql);
-		String sql1 = "SELECT id,staff_id FROM  s_user where id = '"+id+"' and staff_id = '"+staff_id+"'";
-		//查出来的数据转换成list
-		 list = jdbcTemplate.queryForList(sql1);
-		 return list;
+		String sql = "select j.id,j.laboratory_name,j.laboratory_adress,j.laboratory_adressnum,c.category_name,j.laboratory_desc,j.laboratory_renshu from t_jiaoshiinfor j,t_category c where j.id = '"+laboratory_id+"' and j.category_id=c.id";
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
 	}
+	
+	
+	//修改实验室基本信息
+	@Override
+	public List<Map<String, String>> changeLabInfo(String laboratory_id,LabInfo labInfo) {
+		List list = null;
+		List<Map<String , String>> listMap = new ArrayList();
+		Map mapTemp = new HashMap();	
+		String laboratory_adress = labInfo.getLaboratory_adress();//地址
+		String laboratory_adressnum = labInfo.getLaboratory_adressnum();//教室号
+		String laboratory_renshu = labInfo.getLaboratory_renshu();//容纳人数
+		String laboratory_desc = labInfo.getLaboratory_desc();//简介
+		String sql = "update t_jiaoshiinfor set laboratory_adress = '"+laboratory_adress+"',laboratory_adressnum = '"+laboratory_adressnum+"',laboratory_renshu = '"+laboratory_renshu+"',laboratory_desc = '"+laboratory_desc+"' "
+				+ "where id = '"+laboratory_id+"'";
+		try {
+			jdbcTemplate.execute(sql);
+			mapTemp.put("code", "1");
+			mapTemp.put("res", "修改成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			mapTemp.put("code", "0");
+			mapTemp.put("res", "修改失败");
+		}
+		listMap.add(mapTemp);
+		System.err.println(listMap);
+		 return listMap;
+	}
+	
+//	@Override
+//	public List addLabInfo(LabInfo labInfo) {
+//		// TODO Auto-generated method stub
+//		List list = null;
+//		String id = labInfo.getId();
+//		String laboratory_name = labInfo.getLaboratory_name();
+//		String category_id = labInfo.getCategory_id();
+//		String laboratory_adress = labInfo.getLaboratory_adress();
+//		String laboratory_adressnum = labInfo.getLaboratory_adressnum();
+//		String staff_id = labInfo.getStaff_id();//从登陆信息里获取
+//		String laboratory_renshu = labInfo.getLaboratory_renshu();//从登陆信息里获取
+//		String laboratory_desc = labInfo.getLaboratory_desc();//从登陆信息里获取
+//		//String sql = "update t_jiaoshiinfor set user_pwd = '"+loginPw+"' where user_name = '"+loginName+"'";
+//		String sql = "insert into t_jiaoshiinfor(id,laboratory_name,category_id,laboratory_adress,laboratory_adressnum,staff_id,laboratory_renshu,laboratory_desc)value('"+id+"','"+laboratory_name+"','"+category_id+"','"+laboratory_adress+"','"+laboratory_adressnum+"','"+staff_id+"','"+laboratory_renshu+"','"+laboratory_desc+"')";
+//		jdbcTemplate.execute(sql);
+//		String sql1 = "SELECT id,staff_id FROM  s_user where id = '"+id+"' and staff_id = '"+staff_id+"'";
+//		//查出来的数据转换成list
+//		 list = jdbcTemplate.queryForList(sql1);
+//		 return list;
+//	}
+	
 	
 	//实验室管理员添加实验室无课课表
 	@Override

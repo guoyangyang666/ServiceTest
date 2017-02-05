@@ -46,29 +46,63 @@ public class AdminService {
 		return json;
 	}
 	
-	@RequestMapping(value = "/addLabInfo.do", method = { RequestMethod.GET,RequestMethod.POST })
-	public @ResponseBody String addPerson(HttpServletRequest request,
-			String id, String laboratory_name, String category_id, String laboratory_adress,
-			String laboratory_adressnum, String staff_id, String laboratory_renshu, String laboratory_desc,
+//	@RequestMapping(value = "/addLabInfo.do", method = { RequestMethod.GET,RequestMethod.POST })
+//	public @ResponseBody String addPerson(HttpServletRequest request,
+//			String id, String laboratory_name, String category_id, String laboratory_adress,
+//			String laboratory_adressnum, String staff_id, String laboratory_renshu, String laboratory_desc,
+//			ModelMap modelMap, HttpServletResponse resp) {
+//		 
+//		JSONObject callback = new JSONObject();
+//		LabInfo labInfo = new LabInfo();
+//		labInfo.setId(id);
+//		labInfo.setLaboratory_name(laboratory_name);
+//		labInfo.setCategory_id(category_id);
+//		labInfo.setLaboratory_adress(laboratory_adress);
+//		labInfo.setLaboratory_adressnum(laboratory_adressnum);
+//		labInfo.setStaff_id(staff_id);
+//		labInfo.setLaboratory_renshu(laboratory_renshu);
+//		labInfo.setLaboratory_desc(laboratory_desc);
+//		adminMgr.addLabInfo(labInfo);
+//		List list = adminMgr.addLabInfo(labInfo);
+//		String json = JSONArray.fromObject(list).toString();
+//		System.out.println(json);
+//		return json;
+//		
+//	}
+	
+	//查询实验室基本信息
+	@RequestMapping(value = "/quryLabInfo.do", method = { RequestMethod.GET,RequestMethod.POST })
+	public @ResponseBody String quryLabInfo(HttpServletRequest request,
+			String laboratory_id,
 			ModelMap modelMap, HttpServletResponse resp) {
-		 
+		String s = null;
+		 List list = adminMgr.quryLabInfo(laboratory_id);
+		 String json = JSONArray.fromObject(list).toString();
+		 System.out.println("-----------------------------------------");
+		 System.out.println(json);
+		 System.out.println("-----------------------------------------");
+		return json;		
+	}
+	
+	//修改实验室基本信息
+	@RequestMapping(value = "/changeLabInfo.do", method = { RequestMethod.GET,RequestMethod.POST })
+	public @ResponseBody String changeLabInfo(HttpServletRequest request,
+			String laboratory_id,String laboratory_adress,
+			String laboratory_adressnum, String laboratory_renshu, String laboratory_desc,
+			ModelMap modelMap, HttpServletResponse resp) {
 		JSONObject callback = new JSONObject();
 		LabInfo labInfo = new LabInfo();
-		labInfo.setId(id);
-		labInfo.setLaboratory_name(laboratory_name);
-		labInfo.setCategory_id(category_id);
 		labInfo.setLaboratory_adress(laboratory_adress);
 		labInfo.setLaboratory_adressnum(laboratory_adressnum);
-		labInfo.setStaff_id(staff_id);
 		labInfo.setLaboratory_renshu(laboratory_renshu);
 		labInfo.setLaboratory_desc(laboratory_desc);
-		adminMgr.addLabInfo(labInfo);
-		List list = adminMgr.addLabInfo(labInfo);
+		List list = adminMgr.changeLabInfo(laboratory_id, labInfo);
 		String json = JSONArray.fromObject(list).toString();
 		System.out.println(json);
-		return json;
-		
+		return json;	
 	}
+	
+	//实验室管理员添加实验室无课课表
 	@RequestMapping(value = "/addLabNoClass.do", method = { RequestMethod.GET,RequestMethod.POST })
 	public @ResponseBody String addLabInfo(HttpServletRequest request,
 			String laboratory_id, String times_index, String staff_id,

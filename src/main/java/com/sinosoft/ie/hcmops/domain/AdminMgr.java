@@ -18,8 +18,11 @@ import com.sinosoft.ie.mpiws.model.PersonInfo;
 public interface AdminMgr {
 	//修改密码
 	public List updatePassword(String loginName, String loginPw);
-	//添加实验室基本信息
-	public List addLabInfo(LabInfo labInfo);
+	//查询实验室基本信息
+	public List<Map<String, String>> quryLabInfo(String laboratory_id);
+	//修改实验室基本信息
+	public List<Map<String, String>> changeLabInfo(String laboratory_id,LabInfo labInfo);
+//	public List addLabInfo(LabInfo LabInfo);
 	//实验室管理员添加实验室无课课表
 	public boolean addLabNoClass(NoClassTimes noClassTimes);
 	//搜索本实验室的所有设备列表,入参是登陆的管理员工号，类型，实验室的id
