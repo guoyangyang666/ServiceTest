@@ -138,8 +138,9 @@ public class AdminMgrImpl implements AdminMgr {
 	}
 	//添加本实验室的设备
 	@Override
-	public boolean addEquip(Equip equip) {
-		boolean list = true;
+	public List<Map<String, String>> addEquip(Equip equip) {
+		List<Map<String , String>> listMap = new ArrayList();
+		Map mapTemp = new HashMap();	
 		String id = equip.getId();
 		String equip_name = equip.getEquip_name();
 		String equip_model = equip.getEquip_model();
@@ -161,17 +162,23 @@ public class AdminMgrImpl implements AdminMgr {
 		String sql = "insert into t_equip(id,equip_name,equip_model,unit_price,equip_number,storage_time,producer,application,equip_image_one,equip_image_two,laboratory_id,operation_time,staff_id,type,equip_desc)value('"+id+"','"+equip_name+"','"+equip_model+"','"+unit_price+"','"+equip_number+"','"+storage_time+"','"+producer+"','"+application+"','"+equip_image_one+"','"+equip_image_two+"','"+laboratory_id+"','"+operation_time+"','"+staff_id+"','"+type+"','"+equip_desc+"')";		
 		try {
 			jdbcTemplate.execute(sql);
-			list = true;
+			mapTemp.put("code", "1");
+			mapTemp.put("res", "添加成功");
 		} catch (Exception e) {
 			e.getMessage();
-			list = false;
+			mapTemp.put("code", "0");
+			mapTemp.put("res", "添加失败");
 		}
-		return list;
+		listMap.add(mapTemp);
+		System.err.println(listMap);
+		 return listMap;
 	}
 	
 	//根据设备id查数据
 	@Override
 	public List queryLabInfo(String laboratory_id, String id) {
+		List<Map<String , String>> listMap = new ArrayList();
+		Map mapTemp = new HashMap();	
 		List list = null;
 		String sql = "SELECT * FROM  t_equip where id = '"+id+"' and laboratory_id = '"+laboratory_id+"'";
 		//查出来的数据转换成list
@@ -187,6 +194,35 @@ public class AdminMgrImpl implements AdminMgr {
 		jdbcTemplate.execute(sql);
 	}
 	
+		
+	//修改实验室设备基本信息
+	@Override
+	public List<Map<String, String>> changeLabEquip(String laboratory_id, Equip equip, String id) {
+		List list = null;
+		List<Map<String , String>> listMap = new ArrayList();
+		Map mapTemp = new HashMap();	
+		String equip_model = equip.getEquip_model();//设备型号
+		String unit_price = equip.getUnit_price();//单价
+		String equip_number = equip.getEquip_number();//数量
+		String producer = equip.getProducer();//生产商
+		String equip_image_one = equip.getEquip_image_one();//设备图片
+		String application = equip.getApplication();//用途简介
+		String equip_desc = equip.getEquip_desc();//备注
+		String sql = "update t_equip set equip_model = '"+equip_model+"',unit_price = '"+unit_price+"',equip_number = '"+equip_number+"',producer = '"+producer+"',equip_image_one = '"+equip_image_one+"',application = '"+application+"',equip_desc = '"+equip_desc+"' "
+				+ "where id = '"+id+"' and laboratory_id = '"+laboratory_id+"'";
+		try {
+			jdbcTemplate.execute(sql);
+			mapTemp.put("code", "1");
+			mapTemp.put("res", "修改成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			mapTemp.put("code", "0");
+			mapTemp.put("res", "修改失败");
+		}
+		listMap.add(mapTemp);
+		System.err.println(listMap);
+		 return listMap;
+	}
 	//查看个人基本信息,入参是管理员工号
 	@Override
 	public List queryLabAdminInfo(String staff_id) {
@@ -299,7 +335,41 @@ public class AdminMgrImpl implements AdminMgr {
 		return list;
 	}
 	
-	
-	
+	//审核学生申请
+	@Override
+	public List<Map<String, String>> changeStuAppoint(String id, String stu_id, String status, String fail_reason) {
+		List list = null;
+		List<Map<String , String>> listMap = new ArrayList();
+		Map mapTemp = new HashMap();			
+		String sql = "update t_stu_experim set status = '"+status+"',fail_reason = '"+fail_reason+"' "
+				+ "where id = '"+id+"' and stu_id = '"+stu_id+"'";
+		try {
+			jdbcTemplate.execute(sql);
+			mapTemp.put("code", "1");
+			mapTemp.put("res", "修改成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			mapTemp.put("code", "0");
+			mapTemp.put("res", "修改失败");
+		}
+		listMap.add(mapTemp);
+		System.err.println(listMap);
+		 return listMap;
+	}
+	//查看所有预约的学生（未审核的2）
+	@Override
+	public List<Map<String, String>> quryStuAppoint(String laboratory_id) {
+		List list = null;
+		String sql = "select se.id,se.status,se.stu_id,s.stu_name,se.staff_id,st.staff_name,ct.batch,ct.week,ct.start_times,ct.stop_times,ct.appoint_week,enn.experim_name,ct.experim_num,j.laboratory_renshu "
+				+ "from t_stu_experim se,t_stu s,t_staff st,t_course_time ct,t_experimbatch_name enn,t_jiaoshiinfor j "
+				+ "where se.laboratory_id = '"+laboratory_id+"' and se.status=2 and se.state=1 and se.stu_id=s.id and se.staff_id=st.id and se.course_time_id=ct.id and enn.id=ct.experim_id and se.laboratory_id=j.id";
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
+	}
 
 }

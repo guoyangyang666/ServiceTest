@@ -1,5 +1,7 @@
 package com.sinosoft.ie.hcmops.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -149,44 +151,34 @@ public class AdminService {
 			ModelMap modelMap, HttpServletResponse resp) {
 		String s = null;
 		JSONObject callback = new JSONObject();
-		List list = adminMgr.queryLabInfo(laboratory_id, id);
-		if(list.size()>0){
-			s = "已有该设备编号";
-		}else{
-			Equip equip = new Equip();
-			equip.setId(id);
-			equip.setEquip_name(equip_name);
-			equip.setEquip_model(equip_model);
-			equip.setUnit_price(unit_price);
-			equip.setEquip_number(equip_number);
-			equip.setStorage_time(storage_time);
-			equip.setProducer(producer);
-			equip.setApplication(application);
-			equip.setEquip_image_one(equip_image_one);
-			equip.setEquip_image_two(equip_image_two);
-			equip.setLaboratory_id(laboratory_id);
-			equip.setStaff_id(staff_id);
-			equip.setType(type);
-			equip.setEquip_desc(equip_desc);
-			boolean bl = adminMgr.addEquip(equip);
-			if(bl){
-				s = "添加成功";
-			}else{
-				s = "添加失败";
-			}
-		}	
-//		String json = JSONArray.fromObject(s).toString();
-//		System.out.println(json);
-		return s;
-		//System.out.println(json);
-		///return "{ 'test' : 'OK'}";		
+		List list = adminMgr.queryLabInfo(laboratory_id, id);		
+		Equip equip = new Equip();
+		equip.setId(id);
+		equip.setEquip_name(equip_name);
+		equip.setEquip_model(equip_model);
+		equip.setUnit_price(unit_price);
+		equip.setEquip_number(equip_number);
+		equip.setStorage_time(storage_time);
+		equip.setProducer(producer);
+		equip.setApplication(application);
+		equip.setEquip_image_one(equip_image_one);
+		equip.setEquip_image_two(equip_image_two);
+		equip.setLaboratory_id(laboratory_id);
+		equip.setStaff_id(staff_id);
+		equip.setType(type);
+		equip.setEquip_desc(equip_desc);
+		List list1 = adminMgr.addEquip(equip);
+		String json = JSONArray.fromObject(list1).toString();
+		System.out.println(json);
+		return json;	
+		
 	}
 	//根据设备id查数据
 	@RequestMapping(value = "/queryLabInfo.do", method = { RequestMethod.GET,RequestMethod.POST })
 	public @ResponseBody String queryLabInfo(HttpServletRequest request,
-			String equip_id, String laboratory_id, ModelMap modelMap, HttpServletResponse resp) {
+			String id, String laboratory_id, ModelMap modelMap, HttpServletResponse resp) {
 		String s = null;
-		 List list = adminMgr.queryLabInfo(laboratory_id, equip_id);
+		 List list = adminMgr.queryLabInfo(laboratory_id, id);
 		 String json = JSONArray.fromObject(list).toString();
 		 System.out.println("-----------------------------------------");
 		 System.out.println(json);
@@ -204,6 +196,26 @@ public class AdminService {
 			return "1";		
 		}
 		
+	//修改实验室设备基本信息
+	@RequestMapping(value = "/changeLabEquip.do", method = { RequestMethod.GET,RequestMethod.POST })
+	public @ResponseBody String changeLabEquip(HttpServletRequest request,
+			String laboratory_id,String id,
+			String equip_model, String unit_price, String equip_number,String producer, String equip_image_one, String application, String equip_desc,
+			ModelMap modelMap, HttpServletResponse resp) {
+		JSONObject callback = new JSONObject();
+		Equip equip = new Equip();
+		equip.setEquip_model(equip_model);
+		equip.setUnit_price(unit_price);
+		equip.setEquip_number(equip_number);
+		equip.setProducer(producer);
+		equip.setEquip_image_one(equip_image_one);
+		equip.setApplication(application);
+		equip.setEquip_desc(equip_desc);
+		List list = adminMgr.changeLabEquip(laboratory_id, equip, id);
+		String json = JSONArray.fromObject(list).toString();
+		System.out.println(json);
+		return json;	
+	}	
 		
 		//查看个人基本信息,入参是管理员工号
 		@RequestMapping(value = "/queryLabAdminInfo.do", method = { RequestMethod.GET,RequestMethod.POST })
@@ -297,4 +309,32 @@ public class AdminService {
 			 System.out.println("-----------------------------------------");
 			return json;		
 		}
+		
+		//审核学生申请
+		@RequestMapping(value = "/changeStuAppoint.do", method = { RequestMethod.GET,RequestMethod.POST })
+		public @ResponseBody String changeStuAppoint(HttpServletRequest request,
+				String stu_id,String id,
+				String status, String fail_reason,
+				ModelMap modelMap, HttpServletResponse resp) {
+			JSONObject callback = new JSONObject();
+			List list = adminMgr.changeStuAppoint(id, stu_id, status, fail_reason);
+			String json = JSONArray.fromObject(list).toString();
+			System.out.println(json);
+			return json;	
+		}	
+		
+		//查看所有预约的学生（未审核的2）
+		@RequestMapping(value = "/quryStuAppoint.do", method = { RequestMethod.GET,RequestMethod.POST })
+		public @ResponseBody String quryStuAppoint(HttpServletRequest request,
+				String laboratory_id,
+				ModelMap modelMap, HttpServletResponse resp) {
+			String s = null;
+			List list = adminMgr.quryStuAppoint(laboratory_id);
+			 String json = JSONArray.fromObject(list).toString();
+			 System.out.println("-----------------------------------------");
+			 System.out.println(json);
+			 System.out.println("-----------------------------------------");
+			return json;		
+		}
+				
 }

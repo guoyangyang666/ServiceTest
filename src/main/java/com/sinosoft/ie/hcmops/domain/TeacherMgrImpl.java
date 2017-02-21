@@ -54,9 +54,9 @@ public class TeacherMgrImpl implements TeacherMgr {
 	public List<Map<String, String>> quryCourseExperim(String laboratory_id, String current_week) {
 		List list = null;
 		List<Map<String,String>> listMap = new ArrayList();
-		String sql= "select * "
-				+ "from t_course_time "
-				+ "where  laboratory_id = '"+laboratory_id+"' and '"+current_week+"'>=start_week and "+current_week+"<=last_week"; 
+		String sql= "select ct.id,ct.week,ct.start_times,ct.stop_times,ct.start_week,ct.last_week,ct.type,tc.courses_name "
+				+ "from t_course_time ct,t_course tc "
+				+ "where  ct.laboratory_id = '"+laboratory_id+"' and '"+current_week+"'>=ct.start_week and "+current_week+"<=ct.last_week and ct.course_id=tc.id and ct.status=1"; 
 		try {
 			list = jdbcTemplate.queryForList(sql);
 		} catch (Exception e) {
@@ -102,17 +102,20 @@ public class TeacherMgrImpl implements TeacherMgr {
 		
 		String id = experimBatch.getId();
 		String experim_id = experimBatch.getExperim_id();
+		String course_id = experimBatch.getCourse_id();//教师已预约
 		String batch = experimBatch.getBatch();
 		String week = experimBatch.getWeek();
 		String start_times = experimBatch.getStart_times();
 		String stop_times = experimBatch.getStop_times();
 		String appoint_week = experimBatch.getAppoint_week();//预约的周（教师）
+		String start_week = experimBatch.getStart_week();//开始周数
+		String last_week = experimBatch.getLast_week();//结束周数
 		String staff_id = experimBatch.getStaff_id();
 		String laboratory_id = experimBatch.getLaboratory_id();//
 		String type = experimBatch.getType();//类型，1为实验室的课，2为教师确认的批次，其他教师不可选
 		String status = experimBatch.getStatus();//1为普通的课程。教师确认批次的状态，（1为已预约，2为取消，3为删除）
 		Integer experim_num = experimBatch.getExperim_num();////预约的人数，与实验室容量对比
-		String sql = "insert into t_course_time(id,experim_id,batch,week,start_times,stop_times,appoint_week,staff_id,laboratory_id,type,status)value('"+id+"','"+experim_id+"','"+batch+"','"+week+"','"+start_times+"','"+stop_times+"','"+appoint_week+"','"+staff_id+"','"+laboratory_id+"','"+type+"','"+status+"')";
+		String sql = "insert into t_course_time(id,experim_id,batch,week,start_times,stop_times,appoint_week,staff_id,laboratory_id,type,status,experim_num,course_id,start_week,last_week)value('"+id+"','"+experim_id+"','"+batch+"','"+week+"','"+start_times+"','"+stop_times+"','"+appoint_week+"','"+staff_id+"','"+laboratory_id+"','"+type+"','"+status+"','"+experim_num+"','"+course_id+"','"+start_week+"','"+last_week+"')";
 		try {
 			jdbcTemplate.execute(sql);
 			mapTemp.put("code", "1");
@@ -196,5 +199,124 @@ public class TeacherMgrImpl implements TeacherMgr {
 		System.err.println(list);
 		return list;
 	}
+	
+	//教师根据选择的实验室id选择相应的实验项目
+	@Override
+	public List<Map<String, String>> quryExperim(String laboratory_id) {
+		List list = null;
+		String sql="select id,experim_name "
+				+ "from t_experimbatch_name "
+				+ "where laboratory_id='"+laboratory_id+"'";
+				
+		System.out.println(sql);
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
+	}
+	//教师根据选择的实验项目选择相应的批次
+	@Override
+	public List<Map<String, String>> quryBatch(String experim_id,String laboratory_id) {
+		List list = null;
+		String sql="select id,batch "
+				+ "from t_experimbatch "
+				+ "where experim_id='"+experim_id+"' and laboratory_id='"+laboratory_id+"'";
+				
+		System.out.println(sql);
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
+	}
+	
+	//首页，预约信息，显示所有教师预约的信息,只显示最新的6条
+	@Override
+	public List<Map<String, String>> quryTeacherAppoint() {
+		List list = null;
+		String sql="select ct.id,en.experim_name,ct.appoint_week,ct.week,ct.start_times,ct.stop_times,ct.status,s.staff_name "
+				+ "from t_course_time ct,t_experimbatch_name en,t_staff s "
+				+ "where ct.experim_id=en.id and ct.staff_id=s.id and ct.type='2' and ct.status='1' limit 0,6";
+				
+		System.out.println(sql);
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
+	}
+	
+	//所有的教师预约信息
+	@Override
+	public List<Map<String, String>> quryAllTeacherAppoint(int current, int pageSize) {
+		int totalRecord;//总条数
+		List list = null;
+		List list1 = null;
+		List<Map<String, String>> listMap = new ArrayList();
+		String sql= "select * from t_course_time where  type=2 and status=1"; 
+		try {
+			list = jdbcTemplate.queryForList(sql);
+			totalRecord = list.size();//计算出总条数							
+			current = (current-1)*pageSize;//当前索引值	
+			String sql1= "select ct.id,en.experim_name,ct.appoint_week,ct.week,ct.start_times,ct.stop_times,ct.status,s.staff_name,j.laboratory_name,j.laboratory_adress,j.laboratory_adressnum "
+					+ "from t_course_time ct,t_experimbatch_name en,t_staff s,t_jiaoshiinfor j "
+					+ "where ct.experim_id=en.id and ct.staff_id=s.id and ct.type=2 and ct.status=1 and ct.laboratory_id=j.id limit "+current+","+pageSize+""; 
+			list1 = jdbcTemplate.queryForList(sql1);
+			//定义一个map
+			Map mapTemp = new HashMap();
+			//把需要的数据放到map里
+			mapTemp.put("totalRecord", totalRecord);
+			//把map放到list里的最后
+			list1.add(mapTemp);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list1);
+		return list1;
+	}
+	
+	//查询周，1-18周
+	@Override
+	public List<Map<String, String>> quryWeek() {
+		List list = null;
+		String sql="select * "
+				+ "from t_week_number ";
+				
+		System.out.println(sql);
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
+	}
+	
+	//查询持续的小节
+	@Override
+	public List<Map<String, String>> quryLastHours() {
+		List list = null;
+		String sql="select * "
+				+ "from t_last_hours ";
+				
+		System.out.println(sql);
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
+	}
+	
+	
+	
 	
 }

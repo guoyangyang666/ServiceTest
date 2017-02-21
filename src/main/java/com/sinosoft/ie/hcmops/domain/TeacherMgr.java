@@ -34,4 +34,17 @@ public interface TeacherMgr {
 //	public List<Map<String, String>> cancelAppointList(String staff_id);
 	//教师查看学生预约的记录
 	public List<Map<String, String>> quryStuAppoint(String staff_id);
+	
+	//教师根据选择的实验室id选择相应的实验项目
+	public List<Map<String, String>> quryExperim(String laboratory_id);
+	//教师根据选择的实验项目选择相应的批次
+	public List<Map<String, String>> quryBatch(String experim_id,String laboratory_id);
+	//首页，预约信息，显示所有教师预约的信息,只显示最新的6条
+	public List<Map<String, String>> quryTeacherAppoint();
+	//所有的教师预约信息
+	public List<Map<String, String>> quryAllTeacherAppoint(int current, int pageSize);
+	//查询周，1-18周
+	public List<Map<String, String>> quryWeek();
+	//查询持续的小节
+	public List<Map<String, String>> quryLastHours();
 }

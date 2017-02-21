@@ -108,21 +108,21 @@ public class StudentsMgrImpl implements StudentsMgr {
 		try {
 			list = jdbcTemplate.queryForList(sql);
 			System.out.println(list);
-			if(list.size()==0){
-				mapTemp.put("code", "1");
-				mapTemp.put("res", "可以添加");
-			}else{
-				mapTemp.put("code", "2");
-				mapTemp.put("res", "您已添加");
-			}
+//			if(list.size()==0){
+//				mapTemp.put("code", "1");
+//				mapTemp.put("res", "可以添加");
+//			}else{
+//				mapTemp.put("code", "2");
+//				mapTemp.put("res", "您已添加");
+//			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			mapTemp.put("code", "0");
-			mapTemp.put("res", "添加成功");
+//			mapTemp.put("code", "0");
+//			mapTemp.put("res", "添加成功");
 		}
-		listMap.add(mapTemp);
-		 return listMap;
+//		listMap.add(mapTemp);
+		 return list;
 	}
 	
 	//学生预约实验室

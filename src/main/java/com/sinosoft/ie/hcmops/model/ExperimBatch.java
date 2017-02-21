@@ -13,7 +13,7 @@ public class ExperimBatch {
 	private String start_times;//开始课时，数组i的值
 	private String stop_times;//持续课时，
 	private String start_week;//开始周数
-	private String last_week;//持续周数
+	private String last_week;//结束周数
 	private String laboratory_id;//对应的实验室
 	private String appoint_week;//预约的周（教师）
 	private String staff_id;//教师工号

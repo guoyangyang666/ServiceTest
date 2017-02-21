@@ -10,6 +10,6 @@ import java.util.Map;
  */
 public interface ContactMeMgr {
 	
-	//查出所有的实验室及负责人的联系方式
-	public List<Map<String, String>> quryAllContact();
+	//查出所有的实验室及负责人的联系方式,current当前页，pageSize一页显示的条数
+	public List<Map<String, String>> quryAllContact(int current,int pageSize);
 }

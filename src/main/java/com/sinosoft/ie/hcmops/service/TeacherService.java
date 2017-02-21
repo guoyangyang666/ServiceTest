@@ -118,12 +118,17 @@ public class TeacherService {
 			experimBatch.setStop_times(stop_times);
 			experimBatch.setAppoint_week(appoint_week);
 			experimBatch.setLaboratory_id(laboratory_id);
+			experimBatch.setStart_week(appoint_week);
+			experimBatch.setLast_week(appoint_week);
 			experimBatch.setStaff_id(staff_id);
+			String course_id ="000000";
+			experimBatch.setCourse_id(course_id);
 			String status = "1";
 			experimBatch.setStatus(status);//教师确认批次的状态，（1为已预约，2为取消，3为删除）
 			String type = "2";
 			experimBatch.setType(type);//类型，1为实验室的课，2为教师确认的批次，其他教师不可选			
 			Integer experim_num = 0;//预约的人数，与实验室容量对比
+			experimBatch.setExperim_num(experim_num);
 			List list = teacherMgr.addLabExperim(experimBatch);		
 			String json = JSONArray.fromObject(list).toString();
 			 System.out.println("-----------------------------------------");
@@ -182,4 +187,79 @@ public class TeacherService {
 			 System.out.println("-----------------------------------------");
 			return json;		
 		}
+		
+		//教师根据选择的实验室id选择相应的实验项目
+		@RequestMapping(value = "/quryExperim.do", method = { RequestMethod.GET,RequestMethod.POST })
+		public @ResponseBody String quryExperim(HttpServletRequest request,
+				String laboratory_id, ModelMap modelMap, HttpServletResponse resp) {
+			String s = null;
+			 List list = teacherMgr.quryExperim(laboratory_id);
+			 String json = JSONArray.fromObject(list).toString();
+			 System.out.println("-----------------------------------------");
+			 System.out.println(json);
+			 System.out.println("-----------------------------------------");
+			return json;		
+		}
+		
+		//教师根据选择的实验项目选择相应的批次
+		@RequestMapping(value = "/quryBatch.do", method = { RequestMethod.GET,RequestMethod.POST })
+		public @ResponseBody String quryBatch(HttpServletRequest request,
+				String experim_id,String laboratory_id, ModelMap modelMap, HttpServletResponse resp) {
+			String s = null;
+			 List list = teacherMgr.quryBatch(experim_id, laboratory_id);
+			 String json = JSONArray.fromObject(list).toString();
+			 System.out.println("-----------------------------------------");
+			 System.out.println(json);
+			 System.out.println("-----------------------------------------");
+			return json;		
+		}
+		//首页，预约信息，显示所有教师预约的信息,只显示最新的6条
+		@RequestMapping(value = "/quryTeacherAppoint.do", method = { RequestMethod.GET,RequestMethod.POST })
+		public @ResponseBody String quryTeacherAppoint(HttpServletRequest request,
+				 ModelMap modelMap, HttpServletResponse resp) {
+			String s = null;
+			 List list = teacherMgr.quryTeacherAppoint();
+			 String json = JSONArray.fromObject(list).toString();
+			 System.out.println("-----------------------------------------");
+			 System.out.println(json);
+			 System.out.println("-----------------------------------------");
+			return json;		
+		}
+		//所有的教师预约信息
+		@RequestMapping(value = "/quryAllTeacherAppoint.do", method = { RequestMethod.GET,RequestMethod.POST })
+		public @ResponseBody String quryAllTeacherAppoint(HttpServletRequest request,
+				int current, int pageSize, ModelMap modelMap, HttpServletResponse resp) {
+			String s = null;
+			 List list = teacherMgr.quryAllTeacherAppoint(current, pageSize);
+			 String json = JSONArray.fromObject(list).toString();
+			 System.out.println("-----------------------------------------");
+			 System.out.println(json);
+			 System.out.println("-----------------------------------------");
+			return json;		
+		}
+		//查询周，1-18周
+		@RequestMapping(value = "/quryWeek.do", method = { RequestMethod.GET,RequestMethod.POST })
+		public @ResponseBody String quryWeek(HttpServletRequest request,
+				ModelMap modelMap, HttpServletResponse resp) {
+			String s = null;
+			 List list = teacherMgr.quryWeek();
+			 String json = JSONArray.fromObject(list).toString();
+			 System.out.println("-----------------------------------------");
+			 System.out.println(json);
+			 System.out.println("-----------------------------------------");
+			return json;		
+		}
+		//查询持续的小节
+		@RequestMapping(value = "/quryLastHours.do", method = { RequestMethod.GET,RequestMethod.POST })
+		public @ResponseBody String quryLastHours(HttpServletRequest request,
+				ModelMap modelMap, HttpServletResponse resp) {
+			String s = null;
+			 List list = teacherMgr.quryLastHours();
+			 String json = JSONArray.fromObject(list).toString();
+			 System.out.println("-----------------------------------------");
+			 System.out.println(json);
+			 System.out.println("-----------------------------------------");
+			return json;		
+		}
+		
 }

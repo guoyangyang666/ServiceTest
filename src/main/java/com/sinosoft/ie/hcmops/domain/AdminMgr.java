@@ -28,11 +28,13 @@ public interface AdminMgr {
 	//搜索本实验室的所有设备列表,入参是登陆的管理员工号，类型，实验室的id
 	public List<Equip> getAllEquip(String type, String staff_id, String laboratory_id);
 	//添加本实验室的设备
-	public boolean addEquip(Equip equip);
+	public List<Map<String, String>> addEquip(Equip equip);
 	//根据设备id和实验室id查数据
 	public List queryLabInfo(String laboratory_id, String id);
 	//根据设备id和实验室id删除数据
 	public void deleteLabInfo(String id,String laboratory_id);
+	//修改实验室设备基本信息
+	public List<Map<String, String>> changeLabEquip(String laboratory_id,Equip equip,String id);
 	//查看个人基本信息,入参是管理员工号
 	public List queryLabAdminInfo(String staff_id);
 	//查看实验室课表
@@ -45,5 +47,8 @@ public interface AdminMgr {
 	public List<Map<String, String>> deleteExperimbatchs(String id);
 	//查找所有的实验批次名
 	public List<Map<String, String>> quryExperimbatchsName(String laboratory_id);
-	
+	//审核学生申请
+	public List<Map<String, String>> changeStuAppoint(String id,String stu_id,String status,String fail_reason);
+	//查看所有预约的学生（未审核的2）
+	public List<Map<String, String>>quryStuAppoint(String laboratory_id);
 }

@@ -10,32 +10,133 @@
 	</head>
 	<body>
 	<div>
-		djkdfjdk
+	</div>
+	<div class="box">
+		<div id="dialogBg"></div>
+		<div id="dialog" class="animated">
+			<img class="dialogIco" width="50" height="50" src="images/ico.png" alt="" />
+			<div class="dialogTop">
+				<a href="javascript:;" class="claseDialogBtn">关闭</a>
+			</div>
+			
+				<ul class="editInfos">
+					<li><label><font color="#ff0000">* </font>实验项目名：<Select id="experim_id" required style="width:130px;"></Select></label></li>				
+					<li><label><font color="#ff0000">* </font>实验批次：<Select id="batch" style="width:130px;"></Select></label></li>
+					<li><label><font color="#ff0000">* </font>持续课时：<Select id="stop_times" style="width:130px;"></Select></label></li>						
+					<li><input type="submit" value="确认"  class="submitBtn"  onClick="AjaxSubmit();"/></li>
+				</ul>
+			
+		</div>
 	</div>
     <script type="text/javascript">
-    
-    	var laboratory_id = localStorage.getItem('laboratoryId');//获取当前管理员操作的实验室id
-    	console.log("laboratory_id",laboratory_id)
-    	//调取课表
+    	//截取url中传过来的参数
+    	var src=$('.iframeClass').prevObject.context.URL;
+    	var index = src.indexOf('?');
+    	var index2 = src.indexOf('&');
+    	var week=src.substr(index2 + 1,src.length);
+    	var result = src.substring(index + 1,index2);
+    	//获取选择的实验室及周的课表
     	$.ajax({
     		type : "post",
            	url: "http://127.0.0.1:9999/hc-mops/teacher/quryCourseExperim.do",
            	async:false, //调整为同步请求
-   			dataType: "json",
-   			data:{
-   				"laboratory_id": laboratory_id,//实验室编号
-   		      },
-   		   success : function(data) {
-				var arr2 = data;
-				course(arr2);
-			},
-			error : function(XMLHttpRequest, textStatus, errorThrown) {
-				alert("出错了，请联系管理员");
-			}
-    	});
+    			dataType: "json",
+    			data:{
+    				"laboratory_id": result,//实验室编号
+    				"current_week":week,//预约的周数
+    		      },
+    		   success : function(data) {
+    			var arr2 = data;
+    			console.log("arr2",arr2);
+    			course(arr2);
+    			lab(result);
+    			lastHours();
+    		},
+    		error : function(XMLHttpRequest, textStatus, errorThrown) {
+    			alert("出错了，请联系管理员");
+    		}
+    	}); 
     
+
+function lab(result){
+	console.log("我执行了");
+	//根据实验室获取所有的项目名
+	$.ajax({
+		type : "post",
+       	url: "http://127.0.0.1:9999/hc-mops/teacher/quryExperim.do",
+       	async:false, //调整为同步请求
+			dataType: "json",
+			data:{
+				"laboratory_id": result,//实验室编号
+		      },
+		   success : function(data) {
+			var data = data;
+			var str = '';
+		  	$.each(data, function(i, value) {
+				str += "<Option id='"+value.id+"'>"+value.experim_name+"</Option>";
+			});
+			$("#experim_id").append(str);
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert("出错了，请联系管理员");
+		}
+	});
+}
+//添加改变事件
+$('#experim_id').on('change',function(){
+	var $opt = $(this).children('option:selected');
+	var experim_id=$($opt).attr('id');
+	console.log($($opt).attr('id'),$($opt).val(),$($opt).html());
+	//通过experim_id，获取相应的批次
+	$.ajax({
+		type : "post",
+       	url: "http://127.0.0.1:9999/hc-mops/teacher/quryBatch.do",
+       	async:false, //调整为同步请求
+			dataType: "json",
+			data:{
+				"laboratory_id": result,//实验室编号
+				"experim_id":experim_id,//
+		      },
+		   success : function(data) {
+			var data = data;
+			var str = '';
+		  	$.each(data, function(i, value) {
+				str += "<Option id='"+value.id+"'>"+value.batch+"</Option>";
+			});
+			$("#batch").append(str);
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert("出错了，请联系管理员");
+		}
+	});
+	
+})
+function lastHours(){
+	$.ajax({
+		type : "post",
+       	url: "http://127.0.0.1:9999/hc-mops/teacher/quryLastHours.do",
+       	async:false, //调整为同步请求
+			dataType: "json",
+			data:{				
+		      },
+		   success : function(data) {
+			var data = data;
+			var str = '';
+		  	$.each(data, function(i, value) {
+				str += "<Option id='"+value.id+"'>"+value.last_hours+"</Option>";
+			});
+			$("#stop_times").append(str);
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert("出错了，请联系管理员");
+		}
+	});
+}
 function course(arr2){
 	var arr = arr2;
+	console.log("我执行了");
+	console.log("arr",arr);
+	
 	var sw =1;
 	/* arr444 = [//课程名 星期数 开始课时 持续课时 开始周数 持续周数
 	       ["IOS应用开发(考查) (限选)",1,1,4,1,15],
@@ -63,7 +164,7 @@ function course(arr2){
 	       var start = parseInt(arr[i].start_times);// 开始课时
 	       var startNum = parseInt(arr[i].stop_times);// 持续课时
 	       var startWeek = parseInt(arr[i].start_week);//开始周数
-	       var lastWeek = parseInt(arr[i].lastWeek);//持续周数
+	       var lastWeek = parseInt(arr[i].last_week);//持续周数
 	       var type = parseInt(arr[i].type);//类型
 	       console.log("i",i);
 	      console.log("type",type);
@@ -80,22 +181,22 @@ function course(arr2){
 	   str += "<table border>";
 	   for(var i = 0 ; i < arr1.length ; i++){
 	       str+="<tr>"
-	    	   console.log("typ223333e",type);
 	       for(var j = 0 ; j < arr1[i].length ; j++){
-	    	   console.log("typ222e",type);
 	           if(arr1[i][j] == null){
 
 	           }else if((typeof arr1[i][j]) == "string"){
-	        	   str+="<td class=unSelected  onClick=addExperimBatch("+i+","+j+") >"+arr1[i][j]+"</td>";//无课的   	  
-	           }else if(type == "1"){
+	        	   str+="<td onClick=addExperimBatch("+i+","+j+") >"+arr1[i][j]+"</td>";//无课的   	  
+	           }else{
 	               /* str+="<td class=selected rowspan="+arr1[i][j].rowspan+">"+arr1[i][j].content+"</td>"//有课的 */
-	               str+="<td class=selected rowspan="+arr1[i][j].rowspan+">当前课程不可选</td>"
+	               str+="<td rowspan="+arr1[i][j].rowspan+">"+arr1[i][j].content+"</td>"
 	           }
 	       }    
 	       str+="</tr>"
 	   }
 	   str += "</table>";
-	   document.write(str);
+	     document.write(str);  
+	   /*  document.getElementById('xinCourse').appendChild(str); */
+	   /* document.getElementById(xinCourse).append(str); */
  } 
  function addExperimBatch(i,j){
 	 localStorage.setItem('start_times',i);
@@ -131,69 +232,110 @@ function course(arr2){
 	
  }
 
- 
-</script>
-	<div class="box">
-		<div id="dialogBg"></div>
-		<div id="dialog" class="animated">
-			<img class="dialogIco" width="50" height="50" src="images/ico.png" alt="" />
-			<div class="dialogTop">
-				<a href="javascript:;" class="claseDialogBtn">关闭</a>
-			</div>
-			<form action="" method="post" id="editForm">
-				<ul class="editInfos">
-					<li><label><font color="#ff0000">* </font>实验名：<input type="text" name="" required value="" id="course_name" class="ipt" /></label></li>				
-					<li><label><font color="#ff0000">* </font>实验批次：<input type="text" name="" required value=""  class="ipt" /></label></li>
-					<li><label><font color="#ff0000">* </font>持续课时：<input type="text" name="" required value="" id="stop_times" class="ipt" /></label></li>
-					<li><label><font color="#ff0000">* </font>开始周数：<input type="text" name="" required value="" id="startWeek" class="ipt" /></label></li>
-					<li><label><font color="#ff0000">* </font>持续周数：<input type="text" name="" required value="" id="lastWeek" class="ipt" /></label></li>
-					
-					<li><input type="submit" value="确认"  class="submitBtn"  onClick="AjaxSubmit()"/></li>
-				</ul>
-			</form>
-		</div>
-	</div>
- 	<script>
- 	  function AjaxSubmit(){
+ function AjaxSubmit(){	 
 	    var start_times=parseInt(localStorage.getItem('start_times'));//开始课时，数组i的值
- 	 	var course_name=$("#course_name").val();//实验批次名（什么实验）
- 	 	var stop_times=parseInt($("#stop_times").val());//持续课时，
-		if(start_times + stop_times -1 >13){
-			console.log(start_times + stop_times -1);
-			alert("超出当天课时，请重新输入课时");
-		}else{
-			//添加实验批次
-	 	 	$.ajax({
-	 	 		type : "post",
-	 	        	url: "http://127.0.0.1:9999/hc-mops/labAdmin/addLabExperim.do",
-	 	        	async:false, //调整为同步请求
-	 				dataType: "json",
-	 				data:{
-	 					"stop_times":2,//持续课时，
-	 					"week":localStorage.getItem('week'),//星期数，数组j的值
-	 					"start_times":start_times,//开始课时，数组i的值
-	 					"course_name":course_name,//实验批次名（什么实验）
-	 					"laboratory_id": laboratory_id,//实验室编号
-	 			      },
-	 			     contentType:"application/x-www-form-urlencoded;charset=GBK",
-	 			   success : function(data) {
-	 					var arr2 = data;
-	 					if(arr2[0].code == 1){
-	 						/* ok(); */
-	 						alert("添加成功");
-	 					}
-	 					
-	 				},
-	 				error : function(XMLHttpRequest, textStatus, errorThrown) {
-	 					alert("出错了，请联系管理员");
-	 				}
-	 	 	});
-		}
- 	 	
- 	 }
- 	  
- 	 
-	</script>
+	 	var experim_id=$("#experim_id option:selected").attr('id');//实验批次名（什么实验）
+	 	var batch=$("#batch option:selected").attr('id');//批次
+	 	var stop_times=$("#stop_times option:selected").attr('id');//持续课时
+	 	console.log("1",experim_id);
+	 	console.log("2",batch);
+	 	console.log("3",stop_times);
+		//添加实验批次
+	 	$.ajax({
+	 		type : "post",
+     	url: "http://127.0.0.1:9999/hc-mops/teacher/addLabExperim.do",
+     	async:false, //调整为同步请求
+			dataType: "json",
+			data:{
+				"stop_times":stop_times,//持续课时，
+				"week":localStorage.getItem('week'),//星期数，数组j的值
+				"start_times":start_times,//开始课时，数组i的值
+				"experim_id":experim_id,//实验批次名（什么实验）
+				"laboratory_id": result,//实验室编号
+				"batch":batch,//批次
+				"appoint_week":week,//周数
+				"staff_id":localStorage.getItem('number'),//教师工号
+		      },
+		    
+		   success : function(data) {
+				var arr2 = data;				
+				if(arr2[0].code == 1){
+					alert("添加成功");
+					$('#dialogBg').fadeOut(300,function(){
+						$('#dialog').addClass('bounceOutUp').fadeOut();
+					});
+				}
+				$.ajax({
+		    		type : "post",
+		           	url: "http://127.0.0.1:9999/hc-mops/teacher/quryCourseExperim.do",
+		           	async:false, //调整为同步请求
+		    			dataType: "json",
+		    			data:{
+		    				"laboratory_id": result,//实验室编号
+		    				"current_week":week,//预约的周数
+		    		      },
+		    		   success : function(data) {
+		    			var arr2 = data;
+		    			console.log("arr2",arr2);
+		    			course(arr2);
+		    		},
+		    		error : function(XMLHttpRequest, textStatus, errorThrown) {
+		    			alert("出错了，请联系管理员");
+		    		}
+		    	}); 
+				
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				alert("出错了，请联系管理员");
+			}
+	 	});
+	 	
+	 }
+ 
+ //获取该实验室下的所有实验项目名
+ function experim(){
+	 $.ajax({
+ 		type : "post",
+        	url: "http://127.0.0.1:9999/hc-mops/teacher/quryExperim.do",
+        	async:false, //调整为同步请求
+ 			dataType: "json",
+ 			data:{
+ 				"laboratory_id": result,//实验室编号				
+ 		      },
+ 		   success : function(data) {
+ 			var arr2 = data;
+ 			console.log("arr2",arr2);
+ 			
+ 		},
+ 		error : function(XMLHttpRequest, textStatus, errorThrown) {
+ 			alert("出错了，请联系管理员");
+ 		}
+ 	}); 
+ }
+//获取该实验室下的实验项目名的所有批次
+ function experim(experim_id){
+	 $.ajax({
+ 		type : "post",
+        	url: "http://127.0.0.1:9999/hc-mops/teacher/quryBatch.do",
+        	async:false, //调整为同步请求
+ 			dataType: "json",
+ 			data:{
+ 				"laboratory_id": result,//实验室编号	
+ 				"experim_id":experim_id,//批次
+ 		      },
+ 		   success : function(data) {
+ 			var arr2 = data;
+ 			console.log("arr2",arr2);			
+ 			
+ 		},
+ 		error : function(XMLHttpRequest, textStatus, errorThrown) {
+ 			alert("出错了，请联系管理员");
+ 		}
+ 	}); 
+ }
+</script>
+	
+
 	
 </body>
 </html>

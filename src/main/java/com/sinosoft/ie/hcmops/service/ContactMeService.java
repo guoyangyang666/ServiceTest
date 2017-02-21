@@ -30,9 +30,9 @@ public class ContactMeService {
 	//查询最新的两条公告，前台展示
 	@RequestMapping(value = "/quryAllContact.do", method = { RequestMethod.GET,RequestMethod.POST })
 	public @ResponseBody String quryAllContact(HttpServletRequest request,
-			ModelMap modelMap, HttpServletResponse resp) {
+			int current, int pageSize,ModelMap modelMap, HttpServletResponse resp) {
 		String s = null;
-		 List list = contactMgr.quryAllContact();
+		 List list = contactMgr.quryAllContact(current, pageSize);
 		 String json = JSONArray.fromObject(list).toString();
 		 System.out.println("-----------------------------------------");
 		 System.out.println(json);
