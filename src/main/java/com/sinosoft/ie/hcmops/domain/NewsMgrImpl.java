@@ -41,7 +41,7 @@ public class NewsMgrImpl implements NewsMgr {
 			list = jdbcTemplate.queryForList(sql);
 			totalRecord = list.size();//计算出总条数							
 			current = (current-1)*pageSize;//当前索引值	
-			String sql1= "select id,news_title,news_date from t_news where del_status = 1 order by order_num desc limit "+current+","+pageSize+""; 
+			String sql1= "select id,news_title,news_date from t_news where del_status = 1 order by news_date desc limit "+current+","+pageSize+""; 
 			list1 = jdbcTemplate.queryForList(sql1);
 			//定义一个map
 			Map mapTemp = new HashMap();

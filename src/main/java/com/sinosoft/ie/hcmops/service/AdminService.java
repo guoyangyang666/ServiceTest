@@ -336,5 +336,19 @@ public class AdminService {
 			 System.out.println("-----------------------------------------");
 			return json;		
 		}
+		
+		//查看所有预约的学生（未审核的2）
+		@RequestMapping(value = "/quryTeacherAppointId.do", method = { RequestMethod.GET,RequestMethod.POST })
+		public @ResponseBody String quryTeacherAppointId(HttpServletRequest request,
+				String laboratory_id,String week,String start_times,String appoint_week,
+				ModelMap modelMap, HttpServletResponse resp) {
+			String s = null;
+			List list = adminMgr.quryTeacherAppointId(week, start_times, laboratory_id, appoint_week);
+			 String json = JSONArray.fromObject(list).toString();
+			 System.out.println("-----------------------------------------");
+			 System.out.println(json);
+			 System.out.println("-----------------------------------------");
+			return json;		
+		}
 				
 }

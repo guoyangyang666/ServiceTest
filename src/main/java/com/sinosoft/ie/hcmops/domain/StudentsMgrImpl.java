@@ -163,10 +163,10 @@ public class StudentsMgrImpl implements StudentsMgr {
 	public List<Map<String, String>> quryAllExperim(String current_week) {
 		List list = null;
 		
-		String sql="select ct.id,en.experim_name,ct.batch,ct.laboratory_id,j.laboratory_name,j.laboratory_adress,j.laboratory_adressnum,ct.staff_id,s.staff_name,ct.experim_num,ct.appoint_week,"
+		String sql="select ct.id,en.experim_name,e.batch,ct.laboratory_id,j.laboratory_name,j.laboratory_adress,j.laboratory_adressnum,ct.staff_id,s.staff_name,ct.experim_num,ct.appoint_week,"
 				+ "ct.week,ct.start_times,ct.stop_times,j.laboratory_renshu "
-				+ "from t_course_time ct,t_jiaoshiinfor j,t_staff s,t_experimbatch_name en "
-				+ "where ct.experim_id = en.id and ct.laboratory_id = j.id and ct.staff_id = s.id and ct.type=2 and ct.status=1 and ct.appoint_week = '"+current_week+"'";
+				+ "from t_course_time ct,t_jiaoshiinfor j,t_staff s,t_experimbatch_name en,t_experimbatch e "
+				+ "where ct.experim_id = en.id and ct.laboratory_id = j.id and ct.staff_id = s.id and ct.type=2 and ct.status=1 and ct.appoint_week = '"+current_week+"' and e.id=ct.batch";
 		System.out.println(sql);
 		try {
 			list = jdbcTemplate.queryForList(sql);
@@ -183,10 +183,10 @@ public class StudentsMgrImpl implements StudentsMgr {
 	public List<Map<String, String>> quryStuExperim(String stu_id) {
 		List list = null;
 		
-		String sql="select se.id,se.course_time_id,se.laboratory_id,se.staff_id,se.status,en.experim_name,ct.batch,ct.laboratory_id,j.laboratory_name,j.laboratory_adress,j.laboratory_adressnum,ct.staff_id,s.staff_name,ct.appoint_week,"
+		String sql="select se.id,se.course_time_id,se.laboratory_id,se.staff_id,se.status,en.experim_name,e.batch,ct.laboratory_id,j.laboratory_name,j.laboratory_adress,j.laboratory_adressnum,ct.staff_id,s.staff_name,ct.appoint_week,"
 				+ "ct.week,ct.start_times,ct.stop_times,ct.experim_num,st.stu_name,se.stu_id,se.status "
-				+ "from t_course_time ct,t_jiaoshiinfor j,t_staff s,t_experimbatch_name en,t_stu_experim se,t_stu st "
-				+ "where se.stu_id = '"+stu_id+"' and se.course_time_id = ct.id and ct.experim_id = en.id and se.laboratory_id = j.id and se.staff_id = s.id and se.status<>'3' and se.state=1 and se.stu_id=st.id";
+				+ "from t_course_time ct,t_jiaoshiinfor j,t_staff s,t_experimbatch_name en,t_stu_experim se,t_stu st,t_experimbatch e "
+				+ "where se.stu_id = '"+stu_id+"' and se.course_time_id = ct.id and ct.experim_id = en.id and se.laboratory_id = j.id and se.staff_id = s.id and se.status<>'3' and se.state=1 and se.stu_id=st.id and e.id=ct.batch";
 		System.out.println(sql);
 		try {
 			list = jdbcTemplate.queryForList(sql);

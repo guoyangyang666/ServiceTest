@@ -132,9 +132,9 @@ public class TeacherMgrImpl implements TeacherMgr {
 	@Override
 	public List<Map<String, String>> quryAppointList(String staff_id) {
 		List list = null;
-		String sql="select ct.id,ct.week,ct.batch,ct.start_times,ct.stop_times,ct.appoint_week,en.experim_name,j.laboratory_name,j.laboratory_adress,j.laboratory_adressnum "
-				+ "from t_course_time ct,t_experimbatch_name en,t_jiaoshiinfor j "
-				+ "where ct.staff_id = '"+staff_id+"' and ct.type = 2 and ct.status = 1 and ct.experim_id = en.id and ct.laboratory_id = j.id";
+		String sql="select ct.id,ct.week,e.batch,ct.start_times,ct.stop_times,ct.appoint_week,en.experim_name,j.laboratory_name,j.laboratory_adress,j.laboratory_adressnum "
+				+ "from t_course_time ct,t_experimbatch_name en,t_jiaoshiinfor j,t_experimbatch e "
+				+ "where ct.staff_id = '"+staff_id+"' and ct.type = 2 and ct.status = 1 and ct.experim_id = en.id and ct.laboratory_id = j.id and e.id=ct.batch";
 		System.out.println(sql);
 		try {
 			list = jdbcTemplate.queryForList(sql);
@@ -259,19 +259,31 @@ public class TeacherMgrImpl implements TeacherMgr {
 		int totalRecord;//总条数
 		List list = null;
 		List list1 = null;
+		List list2 = null;
+		List list3 = null;
 		List<Map<String, String>> listMap = new ArrayList();
 		String sql= "select * from t_course_time where  type=2 and status=1"; 
 		try {
 			list = jdbcTemplate.queryForList(sql);
 			totalRecord = list.size();//计算出总条数							
 			current = (current-1)*pageSize;//当前索引值	
-			String sql1= "select ct.id,en.experim_name,ct.appoint_week,ct.week,ct.start_times,ct.stop_times,ct.status,s.staff_name,j.laboratory_name,j.laboratory_adress,j.laboratory_adressnum "
+			String sql1= "select ct.id,en.experim_name,ct.appoint_week,ct.week,ct.start_times,ct.stop_times,ct.status,s.staff_name,j.laboratory_name,j.laboratory_adress,j.laboratory_adressnum,ct.experim_num,j.id laboratory_id,s.id staff_id "
 					+ "from t_course_time ct,t_experimbatch_name en,t_staff s,t_jiaoshiinfor j "
 					+ "where ct.experim_id=en.id and ct.staff_id=s.id and ct.type=2 and ct.status=1 and ct.laboratory_id=j.id limit "+current+","+pageSize+""; 
 			list1 = jdbcTemplate.queryForList(sql1);
+//			String sql2= "select j.id "
+//					+ "from t_course_time ct,t_experimbatch_name en,t_staff s,t_jiaoshiinfor j "
+//					+ "where ct.experim_id=en.id and ct.staff_id=s.id and ct.type=2 and ct.status=1 and ct.laboratory_id=j.id limit "+current+","+pageSize+""; 
+//			list2 = jdbcTemplate.queryForList(sql2);
+//			String sql3= "select s.id "
+//					+ "from t_course_time ct,t_experimbatch_name en,t_staff s,t_jiaoshiinfor j "
+//					+ "where ct.experim_id=en.id and ct.staff_id=s.id and ct.type=2 and ct.status=1 and ct.laboratory_id=j.id limit "+current+","+pageSize+""; 
+//			list3 = jdbcTemplate.queryForList(sql3);
 			//定义一个map
 			Map mapTemp = new HashMap();
 			//把需要的数据放到map里
+//			mapTemp.put("laboratory_id", list2);
+//			mapTemp.put("staff_id", list3);
 			mapTemp.put("totalRecord", totalRecord);
 			//把map放到list里的最后
 			list1.add(mapTemp);

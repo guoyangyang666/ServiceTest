@@ -29,7 +29,7 @@ public class NoticeMgrImpl implements NoticeMgr {
 	public List<Map<String, String>> quryTwoNotice() {
 		List list = null;
 		List<Map<String,String>> listMap = new ArrayList();
-		String sql= "select id,notice_title,notice_desc,notice_date,image_url from t_notice where  del_status = 1 order by order_num desc limit 0,2"; 
+		String sql= "select id,notice_title,notice_desc,notice_date,image_url from t_notice where  del_status = 1 order by notice_date desc limit 0,2"; 
 		try {
 			list = jdbcTemplate.queryForList(sql);
 		} catch (Exception e) {
@@ -61,7 +61,7 @@ public class NoticeMgrImpl implements NoticeMgr {
 		List list = null;
 		List list1 = null;
 		List<Map<String , String>> listMap = new ArrayList();
-		String sql= "select * from t_notice where  del_status = 1 order by order_num desc"; 
+		String sql= "select * from t_notice where  del_status = 1 order by notice_date desc"; 
 		try {
 			list = jdbcTemplate.queryForList(sql);
 			totalRecord = list.size();//计算出总条数							
@@ -69,7 +69,7 @@ public class NoticeMgrImpl implements NoticeMgr {
 			System.out.println(current);
 			System.out.println("-----------------------------------------");
 			System.out.println(pageSize);
-			String sql1= "select id,notice_title,notice_desc,notice_date,image_url from t_notice where del_status = 1 order by order_num desc limit "+current+","+pageSize+""; 
+			String sql1= "select id,notice_title,notice_desc,notice_date,image_url from t_notice where del_status = 1 order by notice_date desc limit "+current+","+pageSize+""; 
 			list1 = jdbcTemplate.queryForList(sql1);
 			//定义一个map
 			Map mapTemp = new HashMap();
@@ -92,6 +92,44 @@ public class NoticeMgrImpl implements NoticeMgr {
 		List list = (List<Notice>)jdbcTemplate.query(sql, new BeanPropertyRowMapper(Notice.class));
 		
 		return list;
+	}
+	
+	//管理员取消某一个课，添加公告
+	@Override
+	public List<Map<String, String>> addNotice(Notice notice,String dataId) {
+		List list = null;
+		List<Map<String , String>> listMap = new ArrayList();
+		Map mapTemp = new HashMap();
+		String sql1="delete from t_course_time where id='"+dataId+"'";
+		String sql2="delete from t_stu_experim where course_time_id='"+dataId+"'";
+		try{
+			jdbcTemplate.execute(sql1);		
+			jdbcTemplate.execute(sql2);	
+		}catch (Exception e) {
+			e.printStackTrace();
+			mapTemp.put("code", "2");
+			mapTemp.put("res", "取消失败");
+		}
+		String id = notice.getId();
+		String notice_title = notice.getNotice_title();
+		String notice_desc = notice.getNotice_desc();
+		String notice_detail = notice.getNotice_detail();
+		String notice_date = notice.getNotice_date();
+		String notice_source = notice.getNotice_source();	
+		String image_url = notice.getImage_url();
+		String del_status=notice.getDel_status();
+		String sql = "insert into t_notice(id,notice_title,notice_desc,notice_detail,notice_date,notice_source,image_url,del_status)value('"+id+"','"+notice_title+"','"+notice_desc+"','"+notice_detail+"','"+notice_date+"','"+notice_source+"','"+image_url+"','"+del_status+"')";
+		try {
+			jdbcTemplate.execute(sql);
+			mapTemp.put("code", "1");
+			mapTemp.put("res", "取消成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			mapTemp.put("code", "0");
+			mapTemp.put("res", "取消失败");
+		}
+		listMap.add(mapTemp);
+		 return listMap;
 	}
 
 }

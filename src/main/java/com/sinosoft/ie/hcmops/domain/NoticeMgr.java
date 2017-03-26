@@ -14,4 +14,6 @@ public interface NoticeMgr {
 	public List<Map<String, String>> quryAllNotice(int current,int pageSize);
 	//根据公告的id查询所有内容
 	public List<Notice> quryNotice(String id);
+	//管理员取消某一个课，添加公告
+	public List<Map<String, String>> addNotice(Notice notice,String dataId);
 }

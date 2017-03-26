@@ -122,7 +122,7 @@ public class AdminMgrImpl implements AdminMgr {
 			jdbcTemplate.execute(sql);
 			list = true;
 		} catch (Exception e) {
-			e.getMessage();
+			e.printStackTrace();
 			list = false;
 		}
 		return list;
@@ -140,8 +140,11 @@ public class AdminMgrImpl implements AdminMgr {
 	@Override
 	public List<Map<String, String>> addEquip(Equip equip) {
 		List<Map<String , String>> listMap = new ArrayList();
-		Map mapTemp = new HashMap();	
+		Map mapTemp = new HashMap();
+		try {
+			
 		String id = equip.getId();
+		System.out.println(id);
 		String equip_name = equip.getEquip_name();
 		String equip_model = equip.getEquip_model();
 		String unit_price = equip.getUnit_price();
@@ -159,19 +162,22 @@ public class AdminMgrImpl implements AdminMgr {
 		String staff_id = equip.getStaff_id();
 		String type = equip.getType();
 		String equip_desc = equip.getEquip_desc();
-		String sql = "insert into t_equip(id,equip_name,equip_model,unit_price,equip_number,storage_time,producer,application,equip_image_one,equip_image_two,laboratory_id,operation_time,staff_id,type,equip_desc)value('"+id+"','"+equip_name+"','"+equip_model+"','"+unit_price+"','"+equip_number+"','"+storage_time+"','"+producer+"','"+application+"','"+equip_image_one+"','"+equip_image_two+"','"+laboratory_id+"','"+operation_time+"','"+staff_id+"','"+type+"','"+equip_desc+"')";		
-		try {
-			jdbcTemplate.execute(sql);
-			mapTemp.put("code", "1");
-			mapTemp.put("res", "添加成功");
+		System.out.println("----------------------");
+		System.out.println(equip.toString());
+		String sql = "insert into t_equip(id,equip_name,equip_model,unit_price,equip_number,storage_time,producer,application,equip_image_one,equip_image_two,laboratory_id,operation_time,staff_id,type,equip_desc)value('"+id+"','"+equip_name+"','"+equip_model+"','"+unit_price+"','"+equip_number+"','"+storage_time+"','"+producer+"','"+application+"','"+equip_image_one+"','"+equip_image_two+"','"+laboratory_id+"','"+operation_time+"','"+staff_id+"','"+type+"','"+equip_desc+"')";	
+		//String sql = "select * from t_equip";
+			int i =jdbcTemplate.update(sql);
+				mapTemp.put("code", "1");
+				mapTemp.put("res", "添加成功");
 		} catch (Exception e) {
-			e.getMessage();
+			e.printStackTrace();
 			mapTemp.put("code", "0");
 			mapTemp.put("res", "添加失败");
-		}
+		}finally{
 		listMap.add(mapTemp);
 		System.err.println(listMap);
 		 return listMap;
+		}
 	}
 	
 	//根据设备id查数据
@@ -360,9 +366,26 @@ public class AdminMgrImpl implements AdminMgr {
 	@Override
 	public List<Map<String, String>> quryStuAppoint(String laboratory_id) {
 		List list = null;
-		String sql = "select se.id,se.status,se.stu_id,s.stu_name,se.staff_id,st.staff_name,ct.batch,ct.week,ct.start_times,ct.stop_times,ct.appoint_week,enn.experim_name,ct.experim_num,j.laboratory_renshu "
-				+ "from t_stu_experim se,t_stu s,t_staff st,t_course_time ct,t_experimbatch_name enn,t_jiaoshiinfor j "
-				+ "where se.laboratory_id = '"+laboratory_id+"' and se.status=2 and se.state=1 and se.stu_id=s.id and se.staff_id=st.id and se.course_time_id=ct.id and enn.id=ct.experim_id and se.laboratory_id=j.id";
+		String sql = "select se.id,se.status,se.stu_id,s.stu_name,se.staff_id,st.staff_name,e.batch,ct.week,ct.start_times,ct.stop_times,ct.appoint_week,enn.experim_name,ct.experim_num,j.laboratory_renshu "
+				+ "from t_stu_experim se,t_stu s,t_staff st,t_course_time ct,t_experimbatch_name enn,t_jiaoshiinfor j,t_experimbatch e "
+				+ "where se.laboratory_id = '"+laboratory_id+"' and se.status=2 and se.state=1 and se.stu_id=s.id and se.staff_id=st.id and se.course_time_id=ct.id and enn.id=ct.experim_id and se.laboratory_id=j.id and e.id=ct.batch";
+		try {
+			list = jdbcTemplate.queryForList(sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.err.println(list);
+		return list;
+	}
+	
+	//根据开始课时（如第1节）数组i的值，星期（1,2,3,4,5）星期数，数组j的值，laboratory_id，week（当前周）查到id
+	@Override
+	public List<Map<String, String>> quryTeacherAppointId(String week, String start_times, String laboratory_id,
+			String appoint_week) {
+		List list = null;
+		String sql = "select id "
+				+ "from t_course_time "
+				+ "where week = '"+week+"' and start_times='"+start_times+"' and laboratory_id='"+laboratory_id+"' and appoint_week='"+appoint_week+"' and type='2' and status='1'";
 		try {
 			list = jdbcTemplate.queryForList(sql);
 		} catch (Exception e) {

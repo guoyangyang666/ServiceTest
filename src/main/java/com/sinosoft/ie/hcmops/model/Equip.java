@@ -1,10 +1,22 @@
 package com.sinosoft.ie.hcmops.model;
+
+import org.joda.time.DateTime;
+
 /**
  * 实验室设备
  * @author thinkpad
  *
  */
 public class Equip {
+	@Override
+	public String toString() {
+		return "Equip [id=" + id + ", equip_name=" + equip_name + ", equip_model=" + equip_model + ", unit_price="
+				+ unit_price + ", equip_number=" + equip_number + ", storage_time=" + storage_time + ", producer="
+				+ producer + ", application=" + application + ", equip_image_one=" + equip_image_one
+				+ ", equip_image_two=" + equip_image_two + ", laboratory_id=" + laboratory_id + ", operation_time="
+				+ operation_time + ", staff_id=" + staff_id + ", type=" + type + ", equip_desc=" + equip_desc
+				+ ", order_num=" + order_num + "]";
+	}
 	private String id;//设备编号，id
 	private String equip_name;//设备名称
 	private String equip_model;//设备型号
@@ -88,6 +100,7 @@ public class Equip {
 	public void setLaboratory_id(String laboratory_id) {
 		this.laboratory_id = laboratory_id;
 	}
+	
 	public String getOperation_time() {
 		return operation_time;
 	}

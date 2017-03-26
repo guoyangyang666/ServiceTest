@@ -23,9 +23,8 @@
 			</div>
 			
 				<ul class="editInfos">
-					<li><label><font color="#ff0000">* </font>实验项目名：<Select id="experim_id" required style="width:200px;"></Select></label></li>				
-					<li><label><font color="#ff0000">* </font>实验批次：<Select id="batch" style="width:200px;"></Select></label></li>
-					<li><label><font color="#ff0000">* </font>持续课时：<Select id="stop_times" style="width:200px;"></Select></label></li>						
+					<li><label><font color="#ff0000">* </font>请输入取消标题：<input type="text" id="notice_title" required style="width:200px;"/></label></li>				
+					<li><label><font color="#ff0000">* </font>请输入取消原因：<input type="text" id="notice_detail" style="width:200px;"/></label></li>
 					<li><input type="submit" value="确认"  class="submitBtn"  onClick="AjaxSubmit();"/></li>
 				</ul>
 			
@@ -36,8 +35,8 @@
     	var src=$('.iframeClass').prevObject.context.URL;
     	var index = src.indexOf('?');
     	var index2 = src.indexOf('&');
-    	var week=src.substr(index2 + 1,src.length);//选择的周数
-    	var result = src.substring(index + 1,index2);//实验室编号
+    	var week=src.substr(index2 + 1,src.length);
+    	var result = src.substring(index + 1,index2);
     	//获取选择的实验室及周的课表
     	$.ajax({
     		type : "post",
@@ -45,15 +44,15 @@
            	async:false, //调整为同步请求
     			dataType: "json",
     			data:{
-    				"laboratory_id": result,//实验室编号
-    				"current_week":week,//预约的周数
+    				"laboratory_id": localStorage.getItem('laboratoryId'),//实验室编号
+    				"current_week":week,//选择的周数
     		      },
     		   success : function(data) {
     			var arr2 = data;
     			console.log("arr2",arr2);
-    			course(arr2);
-    			lab(result);
-    			lastHours();
+    			course(arr2);//循环课表
+    			//lab(result);//实验批次
+    			//lastHours();//持续的课时
     		},
     		error : function(XMLHttpRequest, textStatus, errorThrown) {
     			alert("出错了，请联系管理员");
@@ -188,10 +187,10 @@ function course(arr2){
 	           if(arr1[i][j] == null){
 
 	           }else if((typeof arr1[i][j]) == "string"){
-	        	   str+="<td onClick=addExperimBatch("+i+","+j+") >"+arr1[i][j]+"</td>";//无课的   	  
+	        	   str+="<td>"+arr1[i][j]+"</td>";//无课的   	  
 	           }else{
 	               /* str+="<td class=selected rowspan="+arr1[i][j].rowspan+">"+arr1[i][j].content+"</td>"//有课的 */
-	               str+="<td rowspan="+arr1[i][j].rowspan+">"+arr1[i][j].content+"</td>"
+	               str+="<td onClick=cancelExperimBatch("+i+","+j+") rowspan="+arr1[i][j].rowspan+">"+arr1[i][j].content+"</td>"
 	           }
 	       }    
 	       str+="</tr>"
@@ -200,10 +199,64 @@ function course(arr2){
 	     document.write(str);  
 	   /*  document.getElementById('xinCourse').appendChild(str); */
 	   /* document.getElementById(xinCourse).append(str); */
- } 
- function addExperimBatch(i,j){
+ }
+ //取消教师添加的课程
+function cancelExperimBatch1(i,j){
+	console.log("i",i);//开始课时（如第1节）数组i的值
+	console.log("j",j);//星期（1,2,3,4,5）星期数，数组j的值
+	//传入数据：i,j,laboratory_id，week（当前周）
+	$.ajax({
+		type : "post",
+       	//url: "http://127.0.0.1:9999/hc-mops/teacher/quryLastHours.do",//刪除课程表和学生和教师表里的选课信息。
+       	async:false, //调整为同步请求
+			dataType: "json",
+			data:{	
+				"start_times":i,
+				"week":j,
+				"laboratory_id":localStorage.getItem('laboratoryId'),
+				"appoint_week":week,
+		      },
+		   success : function(data) {
+			var data = data;
+			console.log("data",data);
+			addNotice();//添加通知公告
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert("出错了，请联系管理员");
+		}
+	});
+}
+ function cancelExperimBatch(i,j){
 	 localStorage.setItem('start_times',i);
 	 localStorage.setItem('week',j);
+	 console.log("选择的周为",week);
+	//传入数据：i,j,laboratory_id，week（当前周）
+	$.ajax({
+		type : "post",
+       	url: "http://127.0.0.1:9999/hc-mops/labAdmin/quryTeacherAppointId.do",//刪除课程表和学生和教师表里的选课信息。
+       	async:false, //调整为同步请求
+			dataType: "json",
+			data:{	
+				"start_times":i,
+				"week":j,
+				"laboratory_id":localStorage.getItem('laboratoryId'),
+				"appoint_week":week,
+		      },
+		   success : function(data) {
+			   if(data.length==0){
+				   alert("请选择教师添加的课程");
+			   }else{
+				   var dataId = data[0].id;
+					console.log("data1111",dataId);//得到id
+					localStorage.setItem('dataId',dataId);
+					//addNotice();//添加通知公告
+			   }
+			
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert("出错了，请联系管理员");
+		}
+	});
 	 var w,h,className;
 		function getSrceenWH(){
 			w = $(window).width();
@@ -236,34 +289,34 @@ function course(arr2){
  }
 
  function AjaxSubmit(){	 
-	    var start_times=parseInt(localStorage.getItem('start_times'));//开始课时，数组i的值
-	 	var experim_id=$("#experim_id option:selected").attr('id');//实验批次名（什么实验）
+	 console.log("1111");
+	    /* var start_times=parseInt(localStorage.getItem('start_times'));//开始课时，数组i的值
+	    var week=parseInt(localStorage.getItem('week'));//开始课时，数组i的值 */
+	    var notice_title=$("#notice_title").val();
+	    var notice_detail=$("#notice_detail").val();
+	 	/* var experim_id=$("#experim_id option:selected").attr('id');//实验批次名（什么实验）
 	 	var batch=$("#batch option:selected").attr('id');//批次
-	 	var stop_times=$("#stop_times option:selected").attr('id');//持续课时
-	 	console.log("1",experim_id);
-	 	console.log("2",batch);
-	 	console.log("3",stop_times);
+	 	var stop_times=$("#stop_times option:selected").attr('id');//持续课时 */
+	 	 console.log("1",notice_title);
+	 	console.log("2",notice_detail);
 		//添加实验批次
 	 	$.ajax({
 	 		type : "post",
-     	url: "http://127.0.0.1:9999/hc-mops/teacher/addLabExperim.do",
+     	url: "http://127.0.0.1:9999/hc-mops/notice/addNotice.do",//添加公告。找到t_course_time对应的id，找到t_stu_expriem对应的id
      	async:false, //调整为同步请求
 			dataType: "json",
 			data:{
-				"stop_times":stop_times,//持续课时，
-				"week":localStorage.getItem('week'),//星期数，数组j的值
-				"start_times":start_times,//开始课时，数组i的值
-				"experim_id":experim_id,//实验批次名（什么实验）
-				"laboratory_id": result,//实验室编号
-				"batch":batch,//批次
-				"appoint_week":week,//周数
-				"staff_id":localStorage.getItem('number'),//教师工号
+				"notice_title":notice_title,//公告标题
+				"notice_desc":notice_title,
+				"notice_detail":notice_detail,//公告详情
+				"notice_source":'实验室',		
+				"dataId":localStorage.getItem('dataId'),
 		      },
 		    
 		   success : function(data) {
 				var arr2 = data;				
 				if(arr2[0].code == 1){
-					alert("添加成功");
+					alert("取消成功");
 					$('#dialogBg').fadeOut(300,function(){
 						$('#dialog').addClass('bounceOutUp').fadeOut();
 					});
@@ -274,7 +327,7 @@ function course(arr2){
 		           	async:false, //调整为同步请求
 		    			dataType: "json",
 		    			data:{
-		    				"laboratory_id": result,//实验室编号
+		    				"laboratory_id": localStorage.getItem('laboratoryId'),//实验室编号
 		    				"current_week":week,//预约的周数
 		    		      },
 		    		   success : function(data) {
@@ -294,48 +347,6 @@ function course(arr2){
 	 	});
 	 	
 	 }
- 
- //获取该实验室下的所有实验项目名
- function experim(){
-	 $.ajax({
- 		type : "post",
-        	url: "http://127.0.0.1:9999/hc-mops/teacher/quryExperim.do",
-        	async:false, //调整为同步请求
- 			dataType: "json",
- 			data:{
- 				"laboratory_id": result,//实验室编号				
- 		      },
- 		   success : function(data) {
- 			var arr2 = data;
- 			console.log("arr2",arr2);
- 			
- 		},
- 		error : function(XMLHttpRequest, textStatus, errorThrown) {
- 			alert("出错了，请联系管理员");
- 		}
- 	}); 
- }
-//获取该实验室下的实验项目名的所有批次
- function experim(experim_id){
-	 $.ajax({
- 		type : "post",
-        	url: "http://127.0.0.1:9999/hc-mops/teacher/quryBatch.do",
-        	async:false, //调整为同步请求
- 			dataType: "json",
- 			data:{
- 				"laboratory_id": result,//实验室编号	
- 				"experim_id":experim_id,//批次
- 		      },
- 		   success : function(data) {
- 			var arr2 = data;
- 			console.log("arr2",arr2);			
- 			
- 		},
- 		error : function(XMLHttpRequest, textStatus, errorThrown) {
- 			alert("出错了，请联系管理员");
- 		}
- 	}); 
- }
 </script>
 	
 

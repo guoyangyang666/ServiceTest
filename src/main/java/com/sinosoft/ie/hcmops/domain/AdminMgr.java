@@ -50,5 +50,8 @@ public interface AdminMgr {
 	//审核学生申请
 	public List<Map<String, String>> changeStuAppoint(String id,String stu_id,String status,String fail_reason);
 	//查看所有预约的学生（未审核的2）
-	public List<Map<String, String>>quryStuAppoint(String laboratory_id);
+	public List<Map<String, String>> quryStuAppoint(String laboratory_id);
+	//根据开始课时（如第1节）数组i的值，星期（1,2,3,4,5）星期数，数组j的值，laboratory_id，week（当前周）查到id
+	public List<Map<String, String>> quryTeacherAppointId(String week,String start_times,String laboratory_id,String appoint_week);
+	
 }
